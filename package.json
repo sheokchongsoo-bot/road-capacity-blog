@@ -1,0 +1,19 @@
+{
+  "name": "markdown-blog",
+  "version": "0.1.0",
+  "description": "마크다운 파일을 정적 블로그 사이트로 변환하는 프레임워크 없는 정적 사이트 생성기",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "node src/build.js",
+    "dev": "node src/build.js && node src/serve.js",
+    "serve": "node src/serve.js",
+    "deploy": "sh deploy.sh"
+  },
+  "devDependencies": {
+    "gray-matter": "^4.0.3",
+    "highlight.js": "^11.9.0",
+    "katex": "^0.17.0",
+    "marked": "^12.0.0"
+  }
+}
