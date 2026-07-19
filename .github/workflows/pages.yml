@@ -1,0 +1,41 @@
+name: Deploy 오이마켓 PWA (GitHub Pages)
+
+# app/ 의 런타임 웹앱을 gh-pages 브랜치로 배포합니다.
+# 배포 후: 저장소 Settings → Pages → "Deploy from a branch" → gh-pages → / (root) 선택.
+
+on:
+  push:
+    branches:
+      - claude/incheon-institute-trading-app-9l5abl
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Assemble PWA site (app/ 런타임만, 문서 제외)
+        run: |
+          rm -rf _site
+          mkdir -p _site
+          cp -R app/. _site/
+          rm -rf _site/docs        # 제안서·화면설계서 등 문서는 파일럿 사이트에서 제외
+          touch _site/.nojekyll      # GitHub Pages의 Jekyll 처리 비활성화
+
+      - name: Publish to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
+          publish_branch: gh-pages
+          force_orphan: true
+          commit_message: "Deploy PWA (${{ github.sha }})"
