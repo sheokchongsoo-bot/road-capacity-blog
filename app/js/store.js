@@ -6,7 +6,7 @@
 (function () {
   "use strict";
 
-  var KEY = "ii-market:v1";
+  var KEY = "ii-market:v2";
   var EMAIL_DOMAIN = "ii.re.kr"; // 인천연구원 예시 도메인 (실제 도메인으로 교체)
 
   // ---------- 카테고리 정의 ----------
@@ -16,7 +16,17 @@
     { id: "book", label: "도서/자료", emoji: "📚" },
     { id: "ticket", label: "티켓/기프티콘", emoji: "🎟️" },
     { id: "etc", label: "기타 물품", emoji: "📦" },
-    { id: "talent", label: "재능/품앗이", emoji: "🤝" }
+    { id: "talent", label: "재능/품앗이", emoji: "🤝" },
+    { id: "club", label: "동호회/스터디", emoji: "🎫" }
+  ];
+
+  // 신고 사유 (확장 기능)
+  var REPORT_REASONS = [
+    "금지 품목(주류·의약품 등)",
+    "허위/과장 정보",
+    "부적절한 언행",
+    "사기 의심",
+    "기타"
   ];
 
   function catOf(id) {
@@ -34,7 +44,8 @@
       u_kim: { id: "u_kim", name: "김도현", dept: "교통물류연구실", email: "kim@" + EMAIL_DOMAIN, temp: 39.5 },
       u_lee: { id: "u_lee", name: "이서연", dept: "도시공간연구실", email: "lee@" + EMAIL_DOMAIN, temp: 42.1 },
       u_park: { id: "u_park", name: "박준영", dept: "경제환경연구실", email: "park@" + EMAIL_DOMAIN, temp: 36.5 },
-      u_choi: { id: "u_choi", name: "최민지", dept: "행정지원팀", email: "choi@" + EMAIL_DOMAIN, temp: 40.8 }
+      // 데모 로그인 사용자 겸 운영자(관리자 화면 시연용)
+      u_choi: { id: "u_choi", name: "최민지", dept: "행정지원팀", email: "choi@" + EMAIL_DOMAIN, temp: 40.8, isAdmin: true }
     };
 
     var L = [];
@@ -75,10 +86,29 @@
       minutesAgo: 2600, likes: ["u_kim"], chats: 1, emoji: "✍️",
       desc: "영어권 거주 경험 있습니다. 초록·요약 수준 교정 가능해요.\n급하지 않은 분, 재능 교환 또는 점심 한 끼로!" });
 
+    // 확장 기능 시드
+    var reports = [
+      { id: "r_seed1", targetType: "listing", targetId: "l3", reason: "허위/과장 정보",
+        byId: "u_kim", createdAt: Date.now() - 3600000, status: "open" }
+    ];
+    var notifications = [
+      { id: "n_seed1", userId: "u_choi", type: "system", text: "나눔장터에 오신 것을 환영합니다 🎉",
+        link: "#/", createdAt: Date.now() - 5400000, read: false },
+      { id: "n_seed2", userId: "u_choi", type: "like", text: "회원님의 관심 매물이 예약중으로 변경되었어요.",
+        link: "#/post/l3", createdAt: Date.now() - 1800000, read: false }
+    ];
+    var reviews = [
+      { id: "rv_seed1", listingId: "l6", fromId: "u_kim", toId: "u_lee",
+        rating: 1, text: "친절하게 나눔해 주셨어요. 감사합니다!", createdAt: Date.now() - 86400000 }
+    ];
+
     return {
       users: users,
       listings: L,
       chats: [],           // {id, listingId, buyerId, sellerId, messages:[{from, text, minutesAgo}]}
+      reports: reports,    // {id, targetType, targetId, reason, byId, createdAt, status}
+      notifications: notifications, // {id, userId, type, text, link, createdAt, read}
+      reviews: reviews,    // {id, listingId, fromId, toId, rating, text, createdAt}
       session: null,       // 로그인 사용자 id
       liked: {},           // 데모 로그인 사용자의 관심 목록 오버레이
       loadedAt: Date.now()
@@ -208,8 +238,20 @@
     var order = ["selling", "reserved", "sold"];
     var i = order.indexOf(l.status);
     l.status = order[(i + 1) % order.length];
+    // 거래 상대(구매자)에게 상태 변경 알림
+    var partner = tradePartnerOf(l);
+    if (partner) {
+      var label = l.status === "reserved" ? "예약중" : l.status === "sold" ? "거래완료" : "판매중";
+      addNotification(partner, "status", "‘" + l.title.slice(0, 16) + "’ 상태가 " + label + "로 바뀌었어요.", "#/post/" + l.id);
+    }
     save();
     return l.status;
+  }
+  function setStatus(listingId, status) {
+    var l = getListing(listingId); if (!l) return null;
+    l.status = status;
+    save();
+    return status;
   }
 
   // ---------- 채팅 ----------
@@ -253,10 +295,12 @@
     var c = getChat(chatId); if (!c) return;
     var u = currentUser();
     c.messages.push({ from: u.id, text: text, createdAt: Date.now() });
-    save();
 
     // 프로토타입용 자동 응답 (상대방 흉내)
     var otherId = (c.buyerId === u.id) ? c.sellerId : c.buyerId;
+    // 상대에게 알림
+    addNotification(otherId, "chat", (u.name || "상대방") + "님의 새 메시지: " + text.slice(0, 20), "#/chat/" + c.id);
+    save();
     var replies = [
       "네 안녕하세요! 아직 있습니다 :)",
       "원내 직거래 가능하세요? 본관 로비 어떠세요?",
@@ -271,6 +315,117 @@
   function pushReply(chatId, fromId, text) {
     var c = getChat(chatId); if (!c) return;
     c.messages.push({ from: fromId, text: text, createdAt: Date.now() });
+    save();
+  }
+
+  // =============================================================
+  //  확장 기능: 신고 · 알림 · 후기 · 관리자
+  // =============================================================
+
+  // ---------- 신고 ----------
+  function createReport(targetType, targetId, reason) {
+    var u = currentUser();
+    var r = {
+      id: "r_" + Date.now().toString(36),
+      targetType: targetType, targetId: targetId, reason: reason,
+      byId: u ? u.id : "anon", createdAt: Date.now(), status: "open"
+    };
+    db.reports = db.reports || [];
+    db.reports.push(r);
+    save();
+    return r;
+  }
+  function listReports(status) {
+    var arr = (db.reports || []).slice().sort(function (a, b) { return b.createdAt - a.createdAt; });
+    if (status) arr = arr.filter(function (r) { return r.status === status; });
+    return arr;
+  }
+  function resolveReport(id) {
+    var r = (db.reports || []).filter(function (x) { return x.id === id; })[0];
+    if (r) { r.status = "resolved"; save(); }
+    return r;
+  }
+
+  // ---------- 알림 ----------
+  function addNotification(userId, type, text, link) {
+    if (!userId) return;
+    db.notifications = db.notifications || [];
+    db.notifications.push({
+      id: "n_" + Date.now().toString(36) + Math.floor(Date.now() % 1000),
+      userId: userId, type: type, text: text, link: link || "#/",
+      createdAt: Date.now(), read: false
+    });
+    save();
+  }
+  function myNotifications(userId) {
+    return (db.notifications || [])
+      .filter(function (n) { return n.userId === userId; })
+      .sort(function (a, b) { return b.createdAt - a.createdAt; });
+  }
+  function unreadCount(userId) {
+    return (db.notifications || []).filter(function (n) { return n.userId === userId && !n.read; }).length;
+  }
+  function markAllRead(userId) {
+    (db.notifications || []).forEach(function (n) { if (n.userId === userId) n.read = true; });
+    save();
+  }
+
+  // ---------- 후기 / 거래 확정 ----------
+  function addReview(listingId, toId, rating, text) {
+    var u = currentUser();
+    var rv = {
+      id: "rv_" + Date.now().toString(36),
+      listingId: listingId, fromId: u ? u.id : "anon", toId: toId,
+      rating: rating, text: text || "", createdAt: Date.now()
+    };
+    db.reviews = db.reviews || [];
+    db.reviews.push(rv);
+    // 매너온도 반영(프로토타입: 좋은 후기 +0.5, 아쉬움 -0.5, 상한 99)
+    var target = db.users[toId];
+    if (target) {
+      var delta = rating >= 1 ? 0.5 : -0.5;
+      target.temp = Math.max(0, Math.min(99, Math.round((target.temp + delta) * 10) / 10));
+    }
+    addNotification(toId, "review", "거래 후기가 도착했어요.", "#/me");
+    save();
+    return rv;
+  }
+  function reviewsFor(userId) {
+    return (db.reviews || []).filter(function (rv) { return rv.toId === userId; })
+      .sort(function (a, b) { return b.createdAt - a.createdAt; });
+  }
+  // 특정 매물에서 현재 사용자가 이미 후기를 남겼는지
+  function hasReviewed(listingId, fromId) {
+    return (db.reviews || []).some(function (rv) {
+      return rv.listingId === listingId && rv.fromId === fromId;
+    });
+  }
+  // 매물의 거래 상대(판매자 관점: 채팅한 구매자 중 첫 번째)
+  function tradePartnerOf(listing) {
+    if (!listing) return null;
+    var c = (db.chats || []).filter(function (x) { return x.listingId === listing.id; })[0];
+    return c ? c.buyerId : null;
+  }
+
+  // ---------- 관리자 ----------
+  function isAdmin() {
+    var u = currentUser();
+    return !!(u && u.isAdmin);
+  }
+  function adminStats() {
+    var listings = db.listings || [];
+    return {
+      users: Object.keys(db.users || {}).length,
+      listings: listings.length,
+      selling: listings.filter(function (l) { return l.status === "selling"; }).length,
+      sold: listings.filter(function (l) { return l.status === "sold"; }).length,
+      chats: (db.chats || []).length,
+      openReports: listReports("open").length,
+      reviews: (db.reviews || []).length
+    };
+  }
+  function removeListing(id) {
+    db.listings = (db.listings || []).filter(function (l) { return l.id !== id; });
     save();
   }
 
@@ -317,6 +472,7 @@
   window.Store = {
     EMAIL_DOMAIN: EMAIL_DOMAIN,
     CATEGORIES: CATEGORIES,
+    REPORT_REASONS: REPORT_REASONS,
     catOf: catOf,
     load: load,
     save: save,
@@ -333,11 +489,27 @@
     myLikes: myLikes,
     createListing: createListing,
     cycleStatus: cycleStatus,
+    setStatus: setStatus,
     getChat: getChat,
     openChatForListing: openChatForListing,
     myChats: myChats,
     sendMessage: sendMessage,
     pushReply: pushReply,
+    // 확장 기능
+    createReport: createReport,
+    listReports: listReports,
+    resolveReport: resolveReport,
+    addNotification: addNotification,
+    myNotifications: myNotifications,
+    unreadCount: unreadCount,
+    markAllRead: markAllRead,
+    addReview: addReview,
+    reviewsFor: reviewsFor,
+    hasReviewed: hasReviewed,
+    tradePartnerOf: tradePartnerOf,
+    isAdmin: isAdmin,
+    adminStats: adminStats,
+    removeListing: removeListing,
     login: login,
     demoLogin: demoLogin,
     logout: logout,

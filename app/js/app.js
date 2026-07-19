@@ -32,7 +32,12 @@
     sun: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/></svg>',
     moon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.5 6.5 0 0 0 9.8 9.8z"/></svg>',
     send: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>',
-    right: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>'
+    right: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>',
+    bell: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>',
+    flag: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg>',
+    star: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3 7h7l-5.5 4.5L18.5 21 12 16.5 5.5 21 7.5 13.5 2 9h7z"/></svg>',
+    shield: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>',
+    close: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>'
   };
 
   // ---------- 유틸 ----------
@@ -78,6 +83,85 @@
   }
 
   function go(hash) { location.hash = hash; }
+
+  // ---------- 모달 ----------
+  function closeModal() {
+    var m = document.getElementById("modal-root");
+    if (m) m.remove();
+  }
+  function openModal(title, innerHtml) {
+    closeModal();
+    var root = document.createElement("div");
+    root.id = "modal-root";
+    root.className = "modal-overlay";
+    root.innerHTML =
+      '<div class="modal" role="dialog" aria-modal="true" aria-label="' + esc(title) + '">' +
+        '<div class="modal-head"><strong>' + esc(title) + "</strong>" +
+          '<button class="icon-btn" data-modal-close aria-label="닫기">' + I.close + "</button></div>" +
+        '<div class="modal-body">' + innerHtml + "</div>" +
+      "</div>";
+    document.body.appendChild(root);
+    root.addEventListener("click", function (e) {
+      if (e.target === root || e.target.closest("[data-modal-close]")) closeModal();
+    });
+    return root;
+  }
+
+  // ---------- 알림 벨 (헤더 우측) ----------
+  function bellHtml() {
+    var u = S.currentUser();
+    var n = u ? S.unreadCount(u.id) : 0;
+    var badge = n ? '<span class="bell-badge">' + (n > 9 ? "9+" : n) + "</span>" : "";
+    return '<button class="icon-btn bell" data-bell aria-label="알림">' + I.bell + badge + "</button>";
+  }
+  // 주요 탭 화면의 헤더 우측 액션(알림 + 테마)
+  function mainActions() { return bellHtml() + themeBtnHtml(); }
+
+  // ---------- 신고 모달 ----------
+  function openReportModal(targetType, targetId) {
+    var reasons = S.REPORT_REASONS.map(function (r, i) {
+      return '<label class="opt"><input type="radio" name="reason" value="' + esc(r) + '"' +
+        (i === 0 ? " checked" : "") + '><span>' + esc(r) + "</span></label>";
+    }).join("");
+    openModal("신고하기",
+      '<p class="modal-lead">부적절한 게시물이나 이용자를 신고합니다. 접수 내용은 운영자가 검토합니다.</p>' +
+      '<div class="opt-list">' + reasons + "</div>" +
+      '<textarea class="modal-textarea" id="reportDetail" placeholder="(선택) 상세 내용을 적어주세요"></textarea>' +
+      '<button class="btn primary" id="reportSubmit">신고 접수</button>');
+    document.getElementById("reportSubmit").addEventListener("click", function () {
+      var picked = document.querySelector('input[name="reason"]:checked');
+      S.createReport(targetType, targetId, picked ? picked.value : S.REPORT_REASONS[0]);
+      closeModal();
+      toast("신고가 접수되었습니다. 감사합니다.");
+    });
+  }
+
+  // ---------- 후기 모달 ----------
+  function openReviewModal(listingId, toId, after) {
+    var target = S.getUser(toId);
+    openModal("거래 후기",
+      '<p class="modal-lead"><strong>' + esc(target.name) + "</strong>님과의 거래는 어떠셨나요?</p>" +
+      '<div class="rate-row">' +
+        '<button type="button" class="rate-btn on" data-rate="1">👍 좋았어요</button>' +
+        '<button type="button" class="rate-btn" data-rate="-1">👎 아쉬웠어요</button>' +
+      "</div>" +
+      '<textarea class="modal-textarea" id="reviewText" placeholder="따뜻한 한마디를 남겨주세요 (선택)"></textarea>' +
+      '<button class="btn primary" id="reviewSubmit">후기 등록</button>');
+    var rate = 1;
+    document.querySelectorAll("[data-rate]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        rate = parseInt(b.getAttribute("data-rate"), 10);
+        document.querySelectorAll("[data-rate]").forEach(function (x) { x.classList.remove("on"); });
+        b.classList.add("on");
+      });
+    });
+    document.getElementById("reviewSubmit").addEventListener("click", function () {
+      S.addReview(listingId, toId, rate, document.getElementById("reviewText").value.trim());
+      closeModal();
+      toast("후기가 등록되었어요. 감사합니다!");
+      if (after) after();
+    });
+  }
 
   // ---------- 테마 ----------
   function currentTheme() {
@@ -173,7 +257,7 @@
   function viewHome() {
     var header = topHeader("", {
       locTitle: true,
-      right: themeBtnHtml()
+      right: mainActions()
     });
 
     var chips = '<button class="chip ' + (homeState.category === "all" ? "on" : "") +
@@ -248,7 +332,8 @@
     var liked = me && S.likedBy(l, me.id);
     var min = S.minutesSince(l);
 
-    var header = topHeader("", { back: true, right: themeBtnHtml() });
+    var reportBtn = mine ? "" : '<button class="icon-btn" data-report aria-label="신고">' + I.flag + "</button>";
+    var header = topHeader("", { back: true, right: reportBtn + themeBtnHtml() });
 
     var hero = '<div class="detail-hero">' +
       (l.photo ? '<img src="' + l.photo + '" alt="">' : esc(l.emoji || "📦")) + "</div>";
@@ -258,11 +343,24 @@
       '<div class="seller">' +
         '<div class="avatar">' + esc(seller.name.slice(0, 1)) + "</div>" +
         '<div class="who"><div class="name">' + esc(seller.name) + "</div>" +
-          '<div class="sub">' + esc(seller.dept) + "</div></div>" +
+          '<div class="sub">' + esc(seller.dept) + " · 받은 후기 " + S.reviewsFor(seller.id).length + "</div></div>" +
         '<div class="temp"><span class="val">' + seller.temp.toFixed(1) + "°C</span>" +
           '<div class="bar"><i style="width:' + tempPct + '%"></i></div>' +
           "<div>매너온도</div></div>" +
       "</div>";
+
+    // 거래 확정/후기 대상 판정
+    var partner = S.tradePartnerOf(l);
+    var canReviewAsSeller = mine && l.status === "sold" && partner && !S.hasReviewed(l.id, me.id);
+    var canReviewAsBuyer = !mine && me && l.status === "sold" && partner === me.id && !S.hasReviewed(l.id, me.id);
+    var canReview = canReviewAsSeller || canReviewAsBuyer;
+    var reviewTargetId = mine ? partner : l.sellerId;
+
+    var reviewCta = canReview
+      ? '<div class="review-cta"><div><strong>거래는 잘 마치셨나요?</strong>' +
+          '<div class="sub">거래 상대에게 후기를 남기면 매너온도에 반영됩니다.</div></div>' +
+          '<button class="btn primary" data-review style="width:auto;padding:10px 16px">후기 남기기</button></div>'
+      : "";
 
     var cat = S.catOf(l.category);
     var body =
@@ -271,6 +369,7 @@
         '<div class="cat">' + cat.emoji + " " + esc(cat.label) + " · " + S.relTime(min) + "</div>" +
         '<div class="price-row">' + priceLabelBig(l) + "</div>" +
         '<div class="desc">' + esc(l.desc) + "</div>" +
+        reviewCta +
         '<div class="stats" style="margin-top:18px;color:var(--text-faint);font-size:.8rem;display:flex;gap:14px">' +
           "<span>관심 " + (l.likes || []).length + "</span><span>채팅 " + (l.chats || 0) + "</span>" +
         "</div>" +
@@ -317,6 +416,12 @@
       var s = S.cycleStatus(l.id);
       toast(s === "selling" ? "판매중으로 변경" : s === "reserved" ? "예약중으로 변경" : "거래완료로 변경");
       viewPost(id);
+    });
+    var repBtn = app.querySelector("[data-report]");
+    if (repBtn) repBtn.addEventListener("click", function () { openReportModal("listing", l.id); });
+    var revBtn = app.querySelector("[data-review]");
+    if (revBtn) revBtn.addEventListener("click", function () {
+      openReviewModal(l.id, reviewTargetId, function () { viewPost(id); });
     });
   }
 
@@ -436,7 +541,7 @@
   function viewChats() {
     var me = S.currentUser();
     var chats = S.myChats(me.id);
-    var header = topHeader("채팅", { right: themeBtnHtml() });
+    var header = topHeader("채팅", { right: mainActions() });
 
     var body;
     if (!chats.length) {
@@ -473,7 +578,8 @@
     var otherId = (c.buyerId === me.id) ? c.sellerId : c.buyerId;
     var other = S.getUser(otherId);
 
-    var header = topHeader(other.name, { back: true });
+    var header = topHeader(other.name, { back: true,
+      right: '<button class="icon-btn" data-report-user aria-label="신고">' + I.flag + "</button>" });
 
     var ref =
       '<a class="chat-listing-ref" href="#/post/' + l.id + '">' +
@@ -499,6 +605,9 @@
 
     var stream_el = document.getElementById("stream");
     scrollToBottom();
+
+    var ru = app.querySelector("[data-report-user]");
+    if (ru) ru.addEventListener("click", function () { openReportModal("user", otherId); });
 
     var msg = document.getElementById("msg");
     var send = document.getElementById("send");
@@ -555,7 +664,7 @@
   // =============================================================
   function viewMe() {
     var me = S.currentUser();
-    var header = topHeader("나의 거래", { right: themeBtnHtml() });
+    var header = topHeader("나의 거래", { right: mainActions() });
 
     var myPosts = S.myListings(me.id);
     var likes = S.myLikes(me.id);
@@ -605,16 +714,36 @@
         }).join("");
     }
 
+    var reviews = S.reviewsFor(me.id);
+    var reviewsSection = "";
+    if (reviews.length) {
+      reviewsSection = '<div class="section-title">받은 후기 (' + reviews.length + ")</div>" +
+        reviews.map(function (rv) {
+          var from = S.getUser(rv.fromId);
+          var face = rv.rating >= 1 ? "👍" : "👎";
+          return '<div class="review-row"><div class="rv-face">' + face + "</div>" +
+            '<div class="rv-body"><div class="rv-text">' + esc(rv.text || "(내용 없음)") + "</div>" +
+            '<div class="rv-meta">' + esc(from.name) + " · " + S.relTime(Math.round((Date.now() - rv.createdAt) / 60000)) + "</div></div></div>";
+        }).join("");
+    }
+
+    var adminItem = S.isAdmin()
+      ? '<button data-admin>' + I.shield + ' 운영자 관리<span class="r">' +
+          (S.listReports("open").length ? '<span class="tag">신고 ' + S.listReports("open").length + "</span> " : "") + I.right + "</span></button>"
+      : "";
     var menu =
       '<div class="menu-list">' +
+        adminItem +
         '<button data-toggle-theme>' + themeIcon() + " 화면 테마 전환<span class=\"r\">" +
           (currentTheme() === "dark" ? "다크" : "라이트") + "</span></button>" +
         '<button data-reset>🔄 데모 데이터 초기화<span class="r">' + I.right + "</span></button>" +
         '<button data-logout>🚪 로그아웃<span class="r">' + I.right + "</span></button>" +
       "</div>";
 
-    shell({ header: header, main: head + stats + postsSection + likesSection + menu, tab: "me" });
+    shell({ header: header, main: head + stats + postsSection + likesSection + reviewsSection + menu, tab: "me" });
 
+    var adminBtn = app.querySelector("[data-admin]");
+    if (adminBtn) adminBtn.addEventListener("click", function () { go("#/admin"); });
     app.querySelector("[data-toggle-theme]").addEventListener("click", function () { toggleTheme(); viewMe(); });
     app.querySelector("[data-logout]").addEventListener("click", function () {
       S.logout(); toast("로그아웃되었습니다"); go("#/");
@@ -623,6 +752,90 @@
       if (confirm("데모 데이터를 초기 상태로 되돌릴까요? (등록한 글·채팅이 사라집니다)")) {
         S.reset(); toast("초기화되었습니다"); go("#/");
       }
+    });
+  }
+
+  // =============================================================
+  //  알림
+  // =============================================================
+  function viewNotifications() {
+    var me = S.currentUser();
+    var items = S.myNotifications(me.id);
+    var header = topHeader("알림", { back: true,
+      right: items.length ? '<button class="icon-btn" data-readall aria-label="모두 읽음" style="width:auto;padding:0 12px;font-size:.82rem;color:var(--accent)">모두 읽음</button>' : "" });
+
+    var body;
+    if (!items.length) {
+      body = '<div class="empty"><div class="big">🔔</div>새로운 알림이 없어요.</div>';
+    } else {
+      body = items.map(function (n) {
+        var icon = n.type === "chat" ? "💬" : n.type === "status" ? "🔄" :
+          n.type === "review" ? "⭐" : n.type === "like" ? "❤️" : "📢";
+        var when = S.relTime(Math.round((Date.now() - n.createdAt) / 60000));
+        return '<a class="noti-item' + (n.read ? "" : " unread") + '" href="' + esc(n.link || "#/") + '">' +
+          '<div class="noti-ic">' + icon + "</div>" +
+          '<div class="noti-body"><div class="noti-text">' + esc(n.text) + "</div>" +
+          '<div class="noti-time">' + when + "</div></div></a>";
+      }).join("");
+    }
+    shell({ header: header, main: body, mainClass: "no-tabbar" });
+
+    // 화면을 본 뒤 읽음 처리(다음 진입부터 뱃지 감소)
+    S.markAllRead(me.id);
+    var ra = app.querySelector("[data-readall]");
+    if (ra) ra.addEventListener("click", function () { S.markAllRead(me.id); viewNotifications(); });
+  }
+
+  // =============================================================
+  //  운영자(관리자) 대시보드
+  // =============================================================
+  function viewAdmin() {
+    if (!S.isAdmin()) { notFound(); return; }
+    var st = S.adminStats();
+    var header = topHeader("운영자 · 관리", { back: true, right: themeBtnHtml() });
+
+    var cards = [
+      ["회원", st.users], ["전체 매물", st.listings], ["판매중", st.selling],
+      ["거래완료", st.sold], ["채팅방", st.chats], ["후기", st.reviews]
+    ].map(function (c) {
+      return '<div class="admin-card"><div class="num">' + c[1] + '</div><div class="lbl">' + esc(c[0]) + "</div></div>";
+    }).join("");
+
+    var reports = S.listReports();
+    var repHtml;
+    if (!reports.length) {
+      repHtml = '<div class="empty" style="padding:28px">접수된 신고가 없어요.</div>';
+    } else {
+      repHtml = reports.map(function (r) {
+        var by = S.getUser(r.byId);
+        var target = r.targetType === "listing" ? S.getListing(r.targetId) : null;
+        var ttitle = target ? target.title : (r.targetType + " · " + r.targetId);
+        var when = S.relTime(Math.round((Date.now() - r.createdAt) / 60000));
+        return '<div class="report-item ' + r.status + '">' +
+          '<div class="r-main"><div class="r-title">' + esc(ttitle) + "</div>" +
+          '<div class="r-meta"><span class="tag">' + esc(r.reason) + "</span> " + esc(by.name) + " · " + when + "</div></div>" +
+          '<div class="r-actions">' +
+            (target ? '<a class="chip" href="#/post/' + r.targetId + '">보기</a>' : "") +
+            (r.status === "open"
+              ? '<button class="chip on" data-resolve="' + r.id + '">처리완료</button>'
+              : '<span class="chip">처리됨</span>') +
+          "</div></div>";
+      }).join("");
+    }
+
+    var main =
+      '<div class="section-title">이용 현황</div>' +
+      '<div class="admin-grid">' + cards + "</div>" +
+      '<div class="section-title">신고 처리 (' + st.openReports + "건 대기)</div>" + repHtml;
+
+    shell({ header: header, main: main, mainClass: "no-tabbar" });
+
+    app.querySelectorAll("[data-resolve]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        S.resolveReport(b.getAttribute("data-resolve"));
+        toast("신고를 처리했습니다");
+        viewAdmin();
+      });
     });
   }
 
@@ -644,6 +857,8 @@
     var hash = location.hash || "#/";
     var parts = hash.replace(/^#\//, "").split("/");
 
+    closeModal(); // 라우팅 시 열린 모달 정리
+
     // 로그인 가드
     if (!S.isLoggedIn()) { viewLogin(); return; }
 
@@ -653,6 +868,8 @@
     else if (head === "new") { viewNew(); }
     else if (head === "chats") { viewChats(); }
     else if (head === "chat") { viewChat(parts[1]); }
+    else if (head === "notifications") { viewNotifications(); }
+    else if (head === "admin") { viewAdmin(); }
     else if (head === "me") { viewMe(); }
     else { viewHome(); }
 
@@ -675,6 +892,9 @@
     }
     var nw = e.target.closest("[data-new]");
     if (nw) { e.preventDefault(); go("#/new"); return; }
+
+    var bell = e.target.closest("[data-bell]");
+    if (bell) { e.preventDefault(); go("#/notifications"); return; }
   });
 
   window.addEventListener("hashchange", route);
