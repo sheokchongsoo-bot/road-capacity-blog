@@ -92,7 +92,7 @@
         byId: "u_kim", createdAt: Date.now() - 3600000, status: "open" }
     ];
     var notifications = [
-      { id: "n_seed1", userId: "u_choi", type: "system", text: "나눔장터에 오신 것을 환영합니다 🎉",
+      { id: "n_seed1", userId: "u_choi", type: "system", text: "오이마켓에 오신 것을 환영합니다 🎉",
         link: "#/", createdAt: Date.now() - 5400000, read: false },
       { id: "n_seed2", userId: "u_choi", type: "like", text: "회원님의 관심 매물이 예약중으로 변경되었어요.",
         link: "#/post/l3", createdAt: Date.now() - 1800000, read: false }

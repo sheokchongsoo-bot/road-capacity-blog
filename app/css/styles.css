@@ -1,13 +1,15 @@
 /* =============================================================
-   인천연구원 나눔장터 — 프로토타입 스타일
+   오이마켓 (인천연구원) — 프로토타입 스타일
    순수 CSS. 색상/간격 등 디자인 토큰은 :root 변수에서만 수정한다.
    ============================================================= */
 
 /* ---------- 디자인 토큰 (라이트) ---------- */
 :root {
-  --accent: #ff6f3c;          /* 당근 느낌의 따뜻한 주황 */
+  --accent: #ff6f3c;          /* 따뜻한 주황 (오이마켓 포인트) */
   --accent-strong: #f2551d;
   --accent-weak: #fff1ea;
+
+  --ci: #17497a;              /* 인천연구원 코브랜드(기관 상징색, 임시) */
 
   --bg: #ffffff;
   --bg-subtle: #f5f6f8;
@@ -42,6 +44,8 @@
   --accent: #ff7e50;
   --accent-strong: #ff946e;
   --accent-weak: #3a2418;
+
+  --ci: #5b9bd5;
 
   --bg: #17181c;
   --bg-subtle: #1f2126;
@@ -109,24 +113,62 @@ img { max-width: 100%; display: block; }
 #app {
   position: relative;
   max-width: var(--app-max);
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
   margin: 0 auto;
   background: var(--bg);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 @media (min-width: 520px) {
   body { background: var(--bg-subtle); }
   #app {
     box-shadow: var(--shadow);
-    min-height: 92vh;
+    height: 92vh;
     margin: 4vh auto;
     border-radius: 22px;
-    overflow: hidden;
   }
 }
+
+/* 라우팅 렌더 영역 (코브랜드 바 아래) */
+#view {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ---------- 인천연구원 코브랜드 바 (항상 노출) ---------- */
+#cobrand {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 30px;
+  padding: 0 12px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  font-size: .72rem;
+  user-select: none;
+}
+#cobrand .ci-emblem { display: inline-flex; line-height: 0; }
+#cobrand .ci-name { font-weight: 800; color: var(--text); letter-spacing: -.01em; }
+#cobrand .ci-sub {
+  color: var(--text-faint); font-size: .62rem;
+  letter-spacing: .06em; text-transform: uppercase;
+}
+#cobrand .ci-provide {
+  margin-left: auto; color: var(--text-faint); font-weight: 700;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+#cobrand .ci-provide::before {
+  content: ""; width: 14px; height: 14px; border-radius: 4px;
+  background: var(--accent);
+}
+@media (max-width: 359px) { #cobrand .ci-sub { display: none; } }
 
 /* ---------- 헤더 ---------- */
 .app-header {

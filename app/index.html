@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1">
-  <title>인천연구원 나눔장터</title>
-  <meta name="description" content="인천연구원 원내 직원 전용 중고물품·재능 거래 앱 (프로토타입)">
+  <title>오이마켓 · 인천연구원</title>
+  <meta name="description" content="오이마켓 — 인천연구원 원내 직원 전용 중고물품·재능 거래 앱 (프로토타입)">
   <meta name="theme-color" content="#ff6f3c">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="apple-touch-icon" href="./icons/icon.svg">
   <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="나눔장터">
+  <meta name="apple-mobile-web-app-title" content="오이마켓">
 
   <!-- FOUC 방지: 테마를 <head>에서 먼저 적용 -->
   <script>
@@ -28,7 +28,21 @@
   <link rel="stylesheet" href="./css/styles.css">
 </head>
 <body>
-  <div id="app" role="application" aria-label="인천연구원 나눔장터"></div>
+  <div id="app" role="application" aria-label="오이마켓">
+    <!-- 인천연구원 코브랜드: 라우팅과 무관하게 항상 상단에 노출 -->
+    <div id="cobrand" aria-label="인천연구원 제공">
+      <span class="ci-emblem" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <rect x="1.5" y="1.5" width="21" height="21" rx="6" fill="var(--ci)"/>
+          <path d="M7 17V9M12 17V7M17 17v-6" stroke="#fff" stroke-width="2.1" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="ci-name">인천연구원</span>
+      <span class="ci-sub">Incheon Institute</span>
+      <span class="ci-provide">오이마켓</span>
+    </div>
+    <div id="view"></div>
+  </div>
   <div id="toast" aria-live="polite"></div>
 
   <script src="./js/store.js"></script>

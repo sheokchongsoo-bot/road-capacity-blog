@@ -15,6 +15,7 @@
   S.load();
 
   var app = document.getElementById("app");
+  var view = document.getElementById("view"); // 라우팅 렌더 대상(코브랜드 바는 #app에 고정 유지)
 
   // ---------- 인라인 SVG 아이콘 ----------
   var I = {
@@ -180,7 +181,7 @@
     var header = opts.header || "";
     var main = '<main class="app-main ' + (opts.mainClass || "") + '">' + opts.main + "</main>";
     var tab = opts.tab ? tabbar(opts.tab) : "";
-    app.innerHTML = header + main + tab + (opts.after || "");
+    view.innerHTML = header + main + tab + (opts.after || "");
   }
 
   function tabbar(active) {
@@ -218,11 +219,11 @@
   //  로그인 화면
   // =============================================================
   function viewLogin() {
-    app.innerHTML =
+    view.innerHTML =
       '<div class="login">' +
-        '<div class="logo">🥕</div>' +
-        "<h1>인천연구원 나눔장터</h1>" +
-        '<p class="lead">원내 직원끼리 안전하게<br>중고물품과 재능을 나눠요</p>' +
+        '<div class="logo">🥒</div>' +
+        "<h1>오이마켓</h1>" +
+        '<p class="lead">인천연구원 직원끼리 안전하게<br>중고물품과 재능을 나눠요</p>' +
         '<form id="loginForm" novalidate>' +
           '<input id="email" type="email" inputmode="email" autocomplete="email" ' +
             'placeholder="회사 이메일 (예: hong@' + S.EMAIL_DOMAIN + ')" />' +

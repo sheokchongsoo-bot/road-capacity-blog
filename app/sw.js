@@ -1,6 +1,6 @@
 /* 서비스워커 — 프로토타입용 간단 오프라인 캐시.
    실제 배포 시 캐시 전략/버전 관리를 재검토할 것. */
-var CACHE = "ii-market-v1";
+var CACHE = "ii-market-v2";
 var ASSETS = [
   "./",
   "./index.html",
