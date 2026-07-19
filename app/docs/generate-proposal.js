@@ -112,11 +112,11 @@ const children = [];
 
 // ----- 표지 -----
 children.push(new Paragraph({ spacing: { before: 1400, after: 0 }, alignment: AlignmentType.CENTER,
-  children: [new TextRun({ text: "🥕", size: 96 })] }));
+  children: [new TextRun({ text: "🥒", size: 96 })] }));
 children.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 200, after: 60 },
-  children: [new TextRun({ text: "인천연구원 나눔장터", font: FONT, size: 60, bold: true, color: NAVY })] }));
+  children: [new TextRun({ text: "오이마켓", font: FONT, size: 60, bold: true, color: NAVY })] }));
 children.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 40 },
-  children: [new TextRun({ text: "원내 직원 전용 중고물품·재능 거래 플랫폼", font: FONT, size: 28, color: GREY })] }));
+  children: [new TextRun({ text: "인천연구원 원내 직원 전용 중고물품·재능 거래 플랫폼", font: FONT, size: 28, color: GREY })] }));
 children.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 900 },
   children: [new TextRun({ text: "기획 · 제안서", font: FONT, size: 24, bold: true, color: ACCENT })] }));
 
@@ -124,7 +124,7 @@ children.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after:
 {
   const w = [2600, 6426];
   const info = [
-    ["문서명", "인천연구원 나눔장터 구축 기획·제안서"],
+    ["문서명", "오이마켓(인천연구원) 구축 기획·제안서"],
     ["버전", "v0.1 (MVP 프로토타입 기반 초안)"],
     ["작성일", "2026-07-19"],
     ["구분", "내부 검토용 (기획 합의 및 보안 검토 요청)"],
@@ -148,7 +148,7 @@ children.push(new Paragraph({ children: [new PageBreak()] }));
 children.push(h1("1", "사업 개요"));
 children.push(h2("1.1 추진 배경 및 필요성"));
 children.push(body("원내 직원 사이에서 개인 간 중고물품 거래와 재능 교환(품앗이) 수요가 꾸준히 있으나, 현재는 사내 메신저·게시판·구두 전달 등 비정형 경로에 의존하고 있다. 이로 인해 (1) 물품·재능 정보가 흩어져 검색이 어렵고, (2) 거래 이력·연락이 관리되지 않으며, (3) 외부 중고 플랫폼 이용 시 낯선 상대와의 직거래에 따른 안전·신뢰 부담이 존재한다."));
-children.push(body("‘인천연구원 나눔장터’는 이러한 수요를 원내 구성원이라는 신뢰 기반 위에서 안전하고 편리하게 충족시키는 것을 목표로 한다. 회원이 원내 직원으로 한정되므로 외부 중고 플랫폼의 복잡한 요소(불특정 다수 응대, 위치 기반 인증, 사기 방지 등) 대부분을 덜어낼 수 있어 소규모로도 실효성 있는 서비스 구축이 가능하다."));
+children.push(body("‘오이마켓’은 이러한 수요를 원내 구성원이라는 신뢰 기반 위에서 안전하고 편리하게 충족시키는 것을 목표로 한다. 회원이 원내 직원으로 한정되므로 외부 중고 플랫폼의 복잡한 요소(불특정 다수 응대, 위치 기반 인증, 사기 방지 등) 대부분을 덜어낼 수 있어 소규모로도 실효성 있는 서비스 구축이 가능하다."));
 
 children.push(h2("1.2 목적"));
 children.push(bullet("원내 자원의 재사용을 촉진하여 비용 절감과 자원 순환(ESG)에 기여", 0));
@@ -404,7 +404,7 @@ children.push(h2("9. 리스크 및 대응"));
 
 // ===== 10. 결론 =====
 children.push(h1("10", "결론 및 제언"));
-children.push(body("‘인천연구원 나눔장터’는 원내 직원이라는 신뢰 기반 덕분에 외부 중고 플랫폼 대비 훨씬 단순한 구성으로도 실효성 있는 서비스를 구축할 수 있다. 이미 클릭 가능한 프로토타입이 완성되어 화면·흐름을 즉시 검토·합의할 수 있는 상태이며, 결제·배송 등 규제 부담 요소를 제외해 법적·기술적 리스크를 낮췄다."));
+children.push(body("‘오이마켓’은 원내 직원이라는 신뢰 기반 덕분에 외부 중고 플랫폼 대비 훨씬 단순한 구성으로도 실효성 있는 서비스를 구축할 수 있다. 이미 클릭 가능한 프로토타입이 완성되어 화면·흐름을 즉시 검토·합의할 수 있는 상태이며, 결제·배송 등 규제 부담 요소를 제외해 법적·기술적 리스크를 낮췄다."));
 children.push(body("다음 단계로 (1) 본 제안서를 토대로 기능·화면을 확정하고, (2) 정보보안·개인정보 부서 검토를 우선 진행한 뒤, (3) 백엔드 연동 개발과 소규모 파일럿을 거쳐 정식 오픈할 것을 제안한다."));
 children.push(spacer(200));
 children.push(new Paragraph({ alignment: AlignmentType.RIGHT, spacing: { before: 300 },
@@ -413,7 +413,7 @@ children.push(new Paragraph({ alignment: AlignmentType.RIGHT, spacing: { before:
 // ================= 문서 조립 =================
 const doc = new Document({
   creator: "인천연구원",
-  title: "인천연구원 나눔장터 기획·제안서",
+  title: "오이마켓(인천연구원) 기획·제안서",
   description: "원내 직원 전용 중고물품·재능 거래 플랫폼 제안서",
   styles: {
     default: {
@@ -442,7 +442,7 @@ const doc = new Document({
     footers: {
       default: new Footer({ children: [new Paragraph({ alignment: AlignmentType.CENTER,
         children: [
-          new TextRun({ text: "인천연구원 나눔장터 기획·제안서   |   ", font: FONT, size: 16, color: "999999" }),
+          new TextRun({ text: "오이마켓(인천연구원) 기획·제안서   |   ", font: FONT, size: 16, color: "999999" }),
           new TextRun({ children: [PageNumber.CURRENT], font: FONT, size: 16, color: "999999" }),
         ] })] }),
     },
