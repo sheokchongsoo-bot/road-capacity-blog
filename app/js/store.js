@@ -6,7 +6,7 @@
 (function () {
   "use strict";
 
-  var KEY = "ii-market:v2";
+  var KEY = "ii-market:v3";
   var EMAIL_DOMAIN = "ii.re.kr"; // 인천연구원 예시 도메인 (실제 도메인으로 교체)
 
   // ---------- 카테고리 정의 ----------
@@ -18,15 +18,6 @@
     { id: "etc", label: "기타 물품", emoji: "📦" },
     { id: "talent", label: "재능/품앗이", emoji: "🤝" },
     { id: "club", label: "동호회/스터디", emoji: "🎫" }
-  ];
-
-  // 신고 사유 (확장 기능)
-  var REPORT_REASONS = [
-    "금지 품목(주류·의약품 등)",
-    "허위/과장 정보",
-    "부적절한 언행",
-    "사기 의심",
-    "기타"
   ];
 
   function catOf(id) {
@@ -86,29 +77,19 @@
       minutesAgo: 2600, likes: ["u_kim"], chats: 1, emoji: "✍️",
       desc: "영어권 거주 경험 있습니다. 초록·요약 수준 교정 가능해요.\n급하지 않은 분, 재능 교환 또는 점심 한 끼로!" });
 
-    // 확장 기능 시드
-    var reports = [
-      { id: "r_seed1", targetType: "listing", targetId: "l3", reason: "허위/과장 정보",
-        byId: "u_kim", createdAt: Date.now() - 3600000, status: "open" }
-    ];
+    // 확장 기능 시드 (직원 간 신뢰 기반 — 신고·거래후기는 제외)
     var notifications = [
       { id: "n_seed1", userId: "u_choi", type: "system", text: "오이마켓에 오신 것을 환영합니다 🎉",
         link: "#/", createdAt: Date.now() - 5400000, read: false },
-      { id: "n_seed2", userId: "u_choi", type: "like", text: "회원님의 관심 매물이 예약중으로 변경되었어요.",
+      { id: "n_seed2", userId: "u_choi", type: "status", text: "회원님의 관심 매물이 예약중으로 변경되었어요.",
         link: "#/post/l3", createdAt: Date.now() - 1800000, read: false }
-    ];
-    var reviews = [
-      { id: "rv_seed1", listingId: "l6", fromId: "u_kim", toId: "u_lee",
-        rating: 1, text: "친절하게 나눔해 주셨어요. 감사합니다!", createdAt: Date.now() - 86400000 }
     ];
 
     return {
       users: users,
       listings: L,
       chats: [],           // {id, listingId, buyerId, sellerId, messages:[{from, text, minutesAgo}]}
-      reports: reports,    // {id, targetType, targetId, reason, byId, createdAt, status}
       notifications: notifications, // {id, userId, type, text, link, createdAt, read}
-      reviews: reviews,    // {id, listingId, fromId, toId, rating, text, createdAt}
       session: null,       // 로그인 사용자 id
       liked: {},           // 데모 로그인 사용자의 관심 목록 오버레이
       loadedAt: Date.now()
@@ -319,32 +300,8 @@
   }
 
   // =============================================================
-  //  확장 기능: 신고 · 알림 · 후기 · 관리자
+  //  확장 기능: 알림 · 관리자 (신고·거래후기는 제외)
   // =============================================================
-
-  // ---------- 신고 ----------
-  function createReport(targetType, targetId, reason) {
-    var u = currentUser();
-    var r = {
-      id: "r_" + Date.now().toString(36),
-      targetType: targetType, targetId: targetId, reason: reason,
-      byId: u ? u.id : "anon", createdAt: Date.now(), status: "open"
-    };
-    db.reports = db.reports || [];
-    db.reports.push(r);
-    save();
-    return r;
-  }
-  function listReports(status) {
-    var arr = (db.reports || []).slice().sort(function (a, b) { return b.createdAt - a.createdAt; });
-    if (status) arr = arr.filter(function (r) { return r.status === status; });
-    return arr;
-  }
-  function resolveReport(id) {
-    var r = (db.reports || []).filter(function (x) { return x.id === id; })[0];
-    if (r) { r.status = "resolved"; save(); }
-    return r;
-  }
 
   // ---------- 알림 ----------
   function addNotification(userId, type, text, link) {
@@ -370,36 +327,6 @@
     save();
   }
 
-  // ---------- 후기 / 거래 확정 ----------
-  function addReview(listingId, toId, rating, text) {
-    var u = currentUser();
-    var rv = {
-      id: "rv_" + Date.now().toString(36),
-      listingId: listingId, fromId: u ? u.id : "anon", toId: toId,
-      rating: rating, text: text || "", createdAt: Date.now()
-    };
-    db.reviews = db.reviews || [];
-    db.reviews.push(rv);
-    // 매너온도 반영(프로토타입: 좋은 후기 +0.5, 아쉬움 -0.5, 상한 99)
-    var target = db.users[toId];
-    if (target) {
-      var delta = rating >= 1 ? 0.5 : -0.5;
-      target.temp = Math.max(0, Math.min(99, Math.round((target.temp + delta) * 10) / 10));
-    }
-    addNotification(toId, "review", "거래 후기가 도착했어요.", "#/me");
-    save();
-    return rv;
-  }
-  function reviewsFor(userId) {
-    return (db.reviews || []).filter(function (rv) { return rv.toId === userId; })
-      .sort(function (a, b) { return b.createdAt - a.createdAt; });
-  }
-  // 특정 매물에서 현재 사용자가 이미 후기를 남겼는지
-  function hasReviewed(listingId, fromId) {
-    return (db.reviews || []).some(function (rv) {
-      return rv.listingId === listingId && rv.fromId === fromId;
-    });
-  }
   // 매물의 거래 상대(판매자 관점: 채팅한 구매자 중 첫 번째)
   function tradePartnerOf(listing) {
     if (!listing) return null;
@@ -419,9 +346,7 @@
       listings: listings.length,
       selling: listings.filter(function (l) { return l.status === "selling"; }).length,
       sold: listings.filter(function (l) { return l.status === "sold"; }).length,
-      chats: (db.chats || []).length,
-      openReports: listReports("open").length,
-      reviews: (db.reviews || []).length
+      chats: (db.chats || []).length
     };
   }
   function removeListing(id) {
@@ -472,7 +397,6 @@
   window.Store = {
     EMAIL_DOMAIN: EMAIL_DOMAIN,
     CATEGORIES: CATEGORIES,
-    REPORT_REASONS: REPORT_REASONS,
     catOf: catOf,
     load: load,
     save: save,
@@ -495,17 +419,11 @@
     myChats: myChats,
     sendMessage: sendMessage,
     pushReply: pushReply,
-    // 확장 기능
-    createReport: createReport,
-    listReports: listReports,
-    resolveReport: resolveReport,
+    // 확장 기능 (알림·관리자)
     addNotification: addNotification,
     myNotifications: myNotifications,
     unreadCount: unreadCount,
     markAllRead: markAllRead,
-    addReview: addReview,
-    reviewsFor: reviewsFor,
-    hasReviewed: hasReviewed,
     tradePartnerOf: tradePartnerOf,
     isAdmin: isAdmin,
     adminStats: adminStats,

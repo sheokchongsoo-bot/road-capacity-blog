@@ -35,8 +35,6 @@
     send: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>',
     right: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>',
     bell: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>',
-    flag: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg>',
-    star: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3 7h7l-5.5 4.5L18.5 21 12 16.5 5.5 21 7.5 13.5 2 9h7z"/></svg>',
     shield: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>',
     close: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>'
   };
@@ -117,52 +115,6 @@
   }
   // 주요 탭 화면의 헤더 우측 액션(알림 + 테마)
   function mainActions() { return bellHtml() + themeBtnHtml(); }
-
-  // ---------- 신고 모달 ----------
-  function openReportModal(targetType, targetId) {
-    var reasons = S.REPORT_REASONS.map(function (r, i) {
-      return '<label class="opt"><input type="radio" name="reason" value="' + esc(r) + '"' +
-        (i === 0 ? " checked" : "") + '><span>' + esc(r) + "</span></label>";
-    }).join("");
-    openModal("신고하기",
-      '<p class="modal-lead">부적절한 게시물이나 이용자를 신고합니다. 접수 내용은 운영자가 검토합니다.</p>' +
-      '<div class="opt-list">' + reasons + "</div>" +
-      '<textarea class="modal-textarea" id="reportDetail" placeholder="(선택) 상세 내용을 적어주세요"></textarea>' +
-      '<button class="btn primary" id="reportSubmit">신고 접수</button>');
-    document.getElementById("reportSubmit").addEventListener("click", function () {
-      var picked = document.querySelector('input[name="reason"]:checked');
-      S.createReport(targetType, targetId, picked ? picked.value : S.REPORT_REASONS[0]);
-      closeModal();
-      toast("신고가 접수되었습니다. 감사합니다.");
-    });
-  }
-
-  // ---------- 후기 모달 ----------
-  function openReviewModal(listingId, toId, after) {
-    var target = S.getUser(toId);
-    openModal("거래 후기",
-      '<p class="modal-lead"><strong>' + esc(target.name) + "</strong>님과의 거래는 어떠셨나요?</p>" +
-      '<div class="rate-row">' +
-        '<button type="button" class="rate-btn on" data-rate="1">👍 좋았어요</button>' +
-        '<button type="button" class="rate-btn" data-rate="-1">👎 아쉬웠어요</button>' +
-      "</div>" +
-      '<textarea class="modal-textarea" id="reviewText" placeholder="따뜻한 한마디를 남겨주세요 (선택)"></textarea>' +
-      '<button class="btn primary" id="reviewSubmit">후기 등록</button>');
-    var rate = 1;
-    document.querySelectorAll("[data-rate]").forEach(function (b) {
-      b.addEventListener("click", function () {
-        rate = parseInt(b.getAttribute("data-rate"), 10);
-        document.querySelectorAll("[data-rate]").forEach(function (x) { x.classList.remove("on"); });
-        b.classList.add("on");
-      });
-    });
-    document.getElementById("reviewSubmit").addEventListener("click", function () {
-      S.addReview(listingId, toId, rate, document.getElementById("reviewText").value.trim());
-      closeModal();
-      toast("후기가 등록되었어요. 감사합니다!");
-      if (after) after();
-    });
-  }
 
   // ---------- 테마 ----------
   function currentTheme() {
@@ -333,8 +285,7 @@
     var liked = me && S.likedBy(l, me.id);
     var min = S.minutesSince(l);
 
-    var reportBtn = mine ? "" : '<button class="icon-btn" data-report aria-label="신고">' + I.flag + "</button>";
-    var header = topHeader("", { back: true, right: reportBtn + themeBtnHtml() });
+    var header = topHeader("", { back: true, right: themeBtnHtml() });
 
     var hero = '<div class="detail-hero">' +
       (l.photo ? '<img src="' + l.photo + '" alt="">' : esc(l.emoji || "📦")) + "</div>";
@@ -344,24 +295,11 @@
       '<div class="seller">' +
         '<div class="avatar">' + esc(seller.name.slice(0, 1)) + "</div>" +
         '<div class="who"><div class="name">' + esc(seller.name) + "</div>" +
-          '<div class="sub">' + esc(seller.dept) + " · 받은 후기 " + S.reviewsFor(seller.id).length + "</div></div>" +
+          '<div class="sub">' + esc(seller.dept) + "</div></div>" +
         '<div class="temp"><span class="val">' + seller.temp.toFixed(1) + "°C</span>" +
           '<div class="bar"><i style="width:' + tempPct + '%"></i></div>' +
           "<div>매너온도</div></div>" +
       "</div>";
-
-    // 거래 확정/후기 대상 판정
-    var partner = S.tradePartnerOf(l);
-    var canReviewAsSeller = mine && l.status === "sold" && partner && !S.hasReviewed(l.id, me.id);
-    var canReviewAsBuyer = !mine && me && l.status === "sold" && partner === me.id && !S.hasReviewed(l.id, me.id);
-    var canReview = canReviewAsSeller || canReviewAsBuyer;
-    var reviewTargetId = mine ? partner : l.sellerId;
-
-    var reviewCta = canReview
-      ? '<div class="review-cta"><div><strong>거래는 잘 마치셨나요?</strong>' +
-          '<div class="sub">거래 상대에게 후기를 남기면 매너온도에 반영됩니다.</div></div>' +
-          '<button class="btn primary" data-review style="width:auto;padding:10px 16px">후기 남기기</button></div>'
-      : "";
 
     var cat = S.catOf(l.category);
     var body =
@@ -370,7 +308,6 @@
         '<div class="cat">' + cat.emoji + " " + esc(cat.label) + " · " + S.relTime(min) + "</div>" +
         '<div class="price-row">' + priceLabelBig(l) + "</div>" +
         '<div class="desc">' + esc(l.desc) + "</div>" +
-        reviewCta +
         '<div class="stats" style="margin-top:18px;color:var(--text-faint);font-size:.8rem;display:flex;gap:14px">' +
           "<span>관심 " + (l.likes || []).length + "</span><span>채팅 " + (l.chats || 0) + "</span>" +
         "</div>" +
@@ -417,12 +354,6 @@
       var s = S.cycleStatus(l.id);
       toast(s === "selling" ? "판매중으로 변경" : s === "reserved" ? "예약중으로 변경" : "거래완료로 변경");
       viewPost(id);
-    });
-    var repBtn = app.querySelector("[data-report]");
-    if (repBtn) repBtn.addEventListener("click", function () { openReportModal("listing", l.id); });
-    var revBtn = app.querySelector("[data-review]");
-    if (revBtn) revBtn.addEventListener("click", function () {
-      openReviewModal(l.id, reviewTargetId, function () { viewPost(id); });
     });
   }
 
@@ -579,8 +510,7 @@
     var otherId = (c.buyerId === me.id) ? c.sellerId : c.buyerId;
     var other = S.getUser(otherId);
 
-    var header = topHeader(other.name, { back: true,
-      right: '<button class="icon-btn" data-report-user aria-label="신고">' + I.flag + "</button>" });
+    var header = topHeader(other.name, { back: true });
 
     var ref =
       '<a class="chat-listing-ref" href="#/post/' + l.id + '">' +
@@ -606,9 +536,6 @@
 
     var stream_el = document.getElementById("stream");
     scrollToBottom();
-
-    var ru = app.querySelector("[data-report-user]");
-    if (ru) ru.addEventListener("click", function () { openReportModal("user", otherId); });
 
     var msg = document.getElementById("msg");
     var send = document.getElementById("send");
@@ -715,22 +642,8 @@
         }).join("");
     }
 
-    var reviews = S.reviewsFor(me.id);
-    var reviewsSection = "";
-    if (reviews.length) {
-      reviewsSection = '<div class="section-title">받은 후기 (' + reviews.length + ")</div>" +
-        reviews.map(function (rv) {
-          var from = S.getUser(rv.fromId);
-          var face = rv.rating >= 1 ? "👍" : "👎";
-          return '<div class="review-row"><div class="rv-face">' + face + "</div>" +
-            '<div class="rv-body"><div class="rv-text">' + esc(rv.text || "(내용 없음)") + "</div>" +
-            '<div class="rv-meta">' + esc(from.name) + " · " + S.relTime(Math.round((Date.now() - rv.createdAt) / 60000)) + "</div></div></div>";
-        }).join("");
-    }
-
     var adminItem = S.isAdmin()
-      ? '<button data-admin>' + I.shield + ' 운영자 관리<span class="r">' +
-          (S.listReports("open").length ? '<span class="tag">신고 ' + S.listReports("open").length + "</span> " : "") + I.right + "</span></button>"
+      ? '<button data-admin>' + I.shield + ' 운영자 관리<span class="r">' + I.right + "</span></button>"
       : "";
     var menu =
       '<div class="menu-list">' +
@@ -741,7 +654,7 @@
         '<button data-logout>🚪 로그아웃<span class="r">' + I.right + "</span></button>" +
       "</div>";
 
-    shell({ header: header, main: head + stats + postsSection + likesSection + reviewsSection + menu, tab: "me" });
+    shell({ header: header, main: head + stats + postsSection + likesSection + menu, tab: "me" });
 
     var adminBtn = app.querySelector("[data-admin]");
     if (adminBtn) adminBtn.addEventListener("click", function () { go("#/admin"); });
@@ -797,47 +710,20 @@
 
     var cards = [
       ["회원", st.users], ["전체 매물", st.listings], ["판매중", st.selling],
-      ["거래완료", st.sold], ["채팅방", st.chats], ["후기", st.reviews]
+      ["거래완료", st.sold], ["채팅방", st.chats]
     ].map(function (c) {
       return '<div class="admin-card"><div class="num">' + c[1] + '</div><div class="lbl">' + esc(c[0]) + "</div></div>";
     }).join("");
 
-    var reports = S.listReports();
-    var repHtml;
-    if (!reports.length) {
-      repHtml = '<div class="empty" style="padding:28px">접수된 신고가 없어요.</div>';
-    } else {
-      repHtml = reports.map(function (r) {
-        var by = S.getUser(r.byId);
-        var target = r.targetType === "listing" ? S.getListing(r.targetId) : null;
-        var ttitle = target ? target.title : (r.targetType + " · " + r.targetId);
-        var when = S.relTime(Math.round((Date.now() - r.createdAt) / 60000));
-        return '<div class="report-item ' + r.status + '">' +
-          '<div class="r-main"><div class="r-title">' + esc(ttitle) + "</div>" +
-          '<div class="r-meta"><span class="tag">' + esc(r.reason) + "</span> " + esc(by.name) + " · " + when + "</div></div>" +
-          '<div class="r-actions">' +
-            (target ? '<a class="chip" href="#/post/' + r.targetId + '">보기</a>' : "") +
-            (r.status === "open"
-              ? '<button class="chip on" data-resolve="' + r.id + '">처리완료</button>'
-              : '<span class="chip">처리됨</span>') +
-          "</div></div>";
-      }).join("");
-    }
-
     var main =
       '<div class="section-title">이용 현황</div>' +
       '<div class="admin-grid">' + cards + "</div>" +
-      '<div class="section-title">신고 처리 (' + st.openReports + "건 대기)</div>" + repHtml;
+      '<div class="section-title">안내</div>' +
+      '<div class="empty" style="padding:24px 20px;text-align:left;color:var(--text-muted)">' +
+        '직원 간 신뢰 기반 서비스로 운영됩니다. 필요 시 이용 현황을 확인하세요.' +
+      "</div>";
 
     shell({ header: header, main: main, mainClass: "no-tabbar" });
-
-    app.querySelectorAll("[data-resolve]").forEach(function (b) {
-      b.addEventListener("click", function () {
-        S.resolveReport(b.getAttribute("data-resolve"));
-        toast("신고를 처리했습니다");
-        viewAdmin();
-      });
-    });
   }
 
   // =============================================================

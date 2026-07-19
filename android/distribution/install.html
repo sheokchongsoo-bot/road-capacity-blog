@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>오이마켓 설치 — 인천연구원</title>
+<meta name="description" content="인천연구원 오이마켓 안드로이드 앱 사내 설치 페이지">
+<style>
+  :root{
+    --green:#2b8a3e; --green-deep:#1e7a34; --green-weak:#e6f4e9;
+    --ink:#1e2733; --muted:#5f6874; --faint:#9aa1ab;
+    --bg:#f5f7f6; --surface:#ffffff; --border:#e5e9e6; --border-2:#d6ddd8;
+    --ci-ink:#0a2e6e; --warn-bg:#fff7e6; --warn-bd:#f0d59a; --warn-ink:#8a6412;
+    --sans:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --green:#37b24d; --green-deep:#2b8a3e; --green-weak:#16311d;
+      --ink:#eef0f3; --muted:#a2a8b3; --faint:#727a86;
+      --bg:#14161a; --surface:#1c2026; --border:#2a2f38; --border-2:#353b45;
+      --ci-ink:#dfe6f2; --warn-bg:#332a15; --warn-bd:#5a4a22; --warn-ink:#e6c063;
+    }
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.65;-webkit-font-smoothing:antialiased;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:560px;margin:0 auto;padding:0 18px 56px;}
+
+  /* 인천연구원 코브랜드 */
+  .cobrand{display:flex;align-items:center;gap:8px;height:38px;border-bottom:1px solid var(--border);
+    max-width:560px;margin:0 auto;padding:0 18px;}
+  .cobrand .name{font-weight:800;color:var(--ci-ink);font-size:.82rem;letter-spacing:-.01em;}
+  .cobrand .sub{color:var(--faint);font-size:.64rem;letter-spacing:.06em;text-transform:uppercase;}
+  .cobrand .right{margin-left:auto;color:var(--faint);font-weight:700;font-size:.75rem;display:inline-flex;align-items:center;gap:5px;}
+  .cobrand .right::before{content:"";width:13px;height:13px;border-radius:4px;background:var(--green);}
+
+  /* 히어로 */
+  .hero{text-align:center;padding:34px 0 10px;}
+  .app-icon{width:88px;height:88px;border-radius:22px;margin:0 auto 14px;overflow:hidden;
+    box-shadow:0 10px 26px rgba(30,122,52,.32);}
+  .hero h1{font-size:1.7rem;margin:0 0 4px;letter-spacing:-.02em;}
+  .hero .tag{color:var(--muted);margin:0;}
+
+  /* 카드 */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;
+    padding:20px;margin-top:20px;box-shadow:0 1px 2px rgba(0,0,0,.04);}
+  .card h2{font-size:1rem;margin:0 0 14px;letter-spacing:-.01em;}
+
+  /* 다운로드 */
+  .dl-top{display:flex;gap:16px;align-items:center;}
+  .dl-meta{flex:1;min-width:0;}
+  .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:16px;
+    background:var(--green);color:#fff;border:none;border-radius:11px;padding:15px;
+    font-size:1.02rem;font-weight:800;text-decoration:none;font-family:inherit;cursor:pointer;}
+  .btn:active{background:var(--green-deep);}
+  .btn svg{width:20px;height:20px;}
+  .qr{width:104px;height:104px;flex:none;background:#fff;border:1px solid var(--border);border-radius:10px;padding:6px;}
+  .qr img{width:100%;height:100%;}
+  .qr-note{font-size:.68rem;color:var(--faint);text-align:center;margin-top:5px;}
+
+  dl.specs{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;margin:0;font-size:.9rem;}
+  dl.specs dt{color:var(--muted);}
+  dl.specs dd{margin:0;font-weight:600;text-align:right;font-variant-numeric:tabular-nums;}
+  dl.specs dd.hash{font-family:var(--mono);font-size:.72rem;font-weight:500;word-break:break-all;text-align:right;}
+
+  /* 설치 단계 */
+  ol.steps{list-style:none;counter-reset:s;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;}
+  ol.steps li{counter-increment:s;display:flex;gap:12px;}
+  ol.steps li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;
+    background:var(--green-weak);color:var(--green-deep);font-weight:800;font-size:.85rem;
+    display:flex;align-items:center;justify-content:center;}
+  ol.steps b{display:block;}
+  ol.steps p{margin:2px 0 0;color:var(--muted);font-size:.86rem;}
+
+  .notice{display:flex;gap:10px;background:var(--warn-bg);border:1px solid var(--warn-bd);
+    color:var(--warn-ink);border-radius:12px;padding:13px 15px;margin-top:18px;font-size:.85rem;}
+  .notice svg{flex:none;width:18px;height:18px;margin-top:1px;}
+
+  .foot{text-align:center;color:var(--faint);font-size:.78rem;margin-top:26px;}
+  .kbd{font-family:var(--mono);background:var(--green-weak);color:var(--green-deep);
+    border-radius:5px;padding:1px 6px;font-size:.82em;}
+</style>
+</head>
+<body>
+  <div class="cobrand">
+    <span class="name">인천연구원</span>
+    <span class="sub">Incheon Institute</span>
+    <span class="right">오이마켓</span>
+  </div>
+
+  <div class="wrap">
+    <div class="hero">
+      <div class="app-icon">
+        <!-- 오이마켓 아이콘 -->
+        <svg width="88" height="88" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+          <rect width="512" height="512" rx="112" fill="#1e7a34"/>
+          <g transform="translate(256 256) rotate(-38)">
+            <rect x="-52" y="-150" width="104" height="300" rx="52" fill="#8fd36a"/>
+            <rect x="-52" y="-150" width="46" height="300" rx="23" fill="#a9e087" opacity=".7"/>
+            <g fill="#2f7d2f">
+              <circle cx="6" cy="-96" r="7"/><circle cx="-16" cy="-40" r="7"/>
+              <circle cx="14" cy="6" r="7"/><circle cx="-10" cy="60" r="7"/><circle cx="10" cy="112" r="7"/>
+            </g>
+            <rect x="-16" y="-176" width="32" height="34" rx="12" fill="#3f7f2f"/>
+          </g>
+        </svg>
+      </div>
+      <h1>오이마켓</h1>
+      <p class="tag">인천연구원 직원끼리 중고물품·재능을 나누는 앱</p>
+    </div>
+
+    <!-- 다운로드 -->
+    <div class="card">
+      <h2>앱 다운로드</h2>
+      <div class="dl-top">
+        <div class="dl-meta">
+          <dl class="specs">
+            <dt>버전</dt><dd id="v-version">–</dd>
+            <dt>용량</dt><dd id="v-size">–</dd>
+            <dt>필요 사양</dt><dd id="v-os">–</dd>
+            <dt>업데이트</dt><dd id="v-updated">–</dd>
+            <dt>SHA-256</dt><dd class="hash" id="v-sha">–</dd>
+          </dl>
+        </div>
+        <div>
+          <div class="qr"><img src="./qr.svg" alt="설치 페이지 QR 코드"></div>
+          <div class="qr-note">폰으로 스캔</div>
+        </div>
+      </div>
+      <a class="btn" id="dlBtn" href="#" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>
+        APK 다운로드
+      </a>
+    </div>
+
+    <!-- 설치 방법 -->
+    <div class="card">
+      <h2>설치 방법 (약 1분)</h2>
+      <ol class="steps">
+        <li><div><b>APK 내려받기</b><p>위 <span class="kbd">APK 다운로드</span> 버튼을 누릅니다.</p></div></li>
+        <li><div><b>“이 출처 허용” 켜기</b><p>안드로이드가 설치를 막으면, 뜨는 안내에서 <b>설정 → 이 출처의 앱 설치 허용</b>을 켭니다. (사용하신 브라우저/파일 앱 기준, 최초 1회)</p></div></li>
+        <li><div><b>설치</b><p>내려받은 파일을 열고 <b>설치</b>를 누릅니다.</p></div></li>
+        <li><div><b>Play Protect 안내 시</b><p>“알 수 없는 앱” 경고가 뜨면 사내 배포 앱이므로 <b>무시하고 설치</b>를 선택합니다.</p></div></li>
+      </ol>
+      <div class="notice">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+        <div>인천연구원 <b>내부 배포용</b> 앱입니다. 사내망에서만 내려받고, 외부로 공유하지 마세요. 데이터는 기기 내에 저장됩니다.</div>
+      </div>
+    </div>
+
+    <p class="foot">
+      문의: <span id="v-contact">정보전산팀</span><br>
+      © 인천연구원 · 오이마켓 (사내 배포)
+    </p>
+  </div>
+
+<script>
+  // ▼ 배포 담당자가 이 값만 수정하면 됩니다.
+  var CONFIG = {
+    version: "0.1.0",
+    apk:     "oimarket-0.1.0.apk",     // 이 페이지와 같은 폴더의 APK 파일명
+    size:    "약 3 MB",
+    minOs:   "Android 8.0 이상",
+    updated: "2026-07-19",
+    sha256:  "APK의 SHA-256 값을 넣으세요",   // (예: sha256sum oimarket-0.1.0.apk)
+    contact: "정보전산팀 (내선 0000)"
+  };
+  document.getElementById("v-version").textContent = "v" + CONFIG.version;
+  document.getElementById("v-size").textContent = CONFIG.size;
+  document.getElementById("v-os").textContent = CONFIG.minOs;
+  document.getElementById("v-updated").textContent = CONFIG.updated;
+  document.getElementById("v-sha").textContent = CONFIG.sha256;
+  document.getElementById("v-contact").textContent = CONFIG.contact;
+  var btn = document.getElementById("dlBtn");
+  btn.setAttribute("href", "./" + CONFIG.apk);
+  btn.setAttribute("download", CONFIG.apk);
+</script>
+</body>
+</html>

@@ -7,3 +7,8 @@ local.properties
 captures/
 .cxx/
 /app/src/main/assets/www/
+
+# 서명 비밀 (절대 커밋 금지)
+keystore.properties
+*.jks
+*.keystore
