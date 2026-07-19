@@ -1,0 +1,8 @@
+<resources>
+    <!--
+      사내 인트라넷의 버전 매니페스트(version.json) 주소.
+      비워두면 앱은 업데이트 확인을 하지 않고 네트워크도 쓰지 않습니다.
+      예: https://intra.ii.re.kr/apps/oimarket/version.json
+    -->
+    <string name="update_manifest_url" translatable="false"></string>
+</resources>

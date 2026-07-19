@@ -12,3 +12,6 @@ captures/
 keystore.properties
 *.jks
 *.keystore
+
+# 빌드 산출 APK(배포시 생성)
+distribution/*.apk

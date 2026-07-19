@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- 모든 자산이 앱에 내장되어 인터넷 권한이 필요 없습니다(오프라인). -->
+    <!-- 앱 화면·데이터는 모두 기기 내에 저장됩니다.
+         인터넷은 사내 버전 확인(version.json) 용도로만 사용합니다.
+         (update_manifest_url 이 비어 있으면 네트워크를 전혀 사용하지 않습니다.) -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"

@@ -124,6 +124,8 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             webView.loadUrl("https://appassets.androidplatform.net/assets/www/index.html")
+            // 사내 버전 확인(#3) — update_manifest_url 설정 시에만 동작
+            UpdateChecker.check(this)
         }
     }
 
