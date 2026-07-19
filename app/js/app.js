@@ -221,7 +221,7 @@
   function viewLogin() {
     view.innerHTML =
       '<div class="login">' +
-        '<div class="logo">🥒</div>' +
+        '<div class="logo"><img src="./icons/icon.svg" alt="오이마켓"></div>' +
         "<h1>오이마켓</h1>" +
         '<p class="lead">인천연구원 직원끼리 안전하게<br>중고물품과 재능을 나눠요</p>' +
         '<form id="loginForm" novalidate>' +

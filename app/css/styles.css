@@ -5,11 +5,12 @@
 
 /* ---------- 디자인 토큰 (라이트) ---------- */
 :root {
-  --accent: #ff6f3c;          /* 따뜻한 주황 (오이마켓 포인트) */
-  --accent-strong: #f2551d;
-  --accent-weak: #fff1ea;
+  --accent: #2b8a3e;          /* 싱그러운 초록 (오이마켓 포인트) */
+  --accent-strong: #237032;
+  --accent-weak: #e6f4e9;
 
-  --ci: #17497a;              /* 인천연구원 코브랜드(기관 상징색, 임시) */
+  --ci: #17497a;              /* 인천연구원 코브랜드(기관 상징색) */
+  --ci-ink: #0a2e6e;          /* 인천연구원 워드마크 네이비 */
 
   --bg: #ffffff;
   --bg-subtle: #f5f6f8;
@@ -41,11 +42,12 @@
 
 /* ---------- 디자인 토큰 (다크) ---------- */
 [data-theme="dark"] {
-  --accent: #ff7e50;
-  --accent-strong: #ff946e;
-  --accent-weak: #3a2418;
+  --accent: #37b24d;
+  --accent-strong: #4cc75f;
+  --accent-weak: #15301c;
 
   --ci: #5b9bd5;
+  --ci-ink: #dfe6f2;
 
   --bg: #17181c;
   --bg-subtle: #1f2126;
@@ -154,8 +156,8 @@ img { max-width: 100%; display: block; }
   font-size: .72rem;
   user-select: none;
 }
-#cobrand .ci-emblem { display: inline-flex; line-height: 0; }
-#cobrand .ci-name { font-weight: 800; color: var(--text); letter-spacing: -.01em; }
+#cobrand .ci-emblem { display: block; height: 20px; width: auto; }
+#cobrand .ci-name { font-weight: 800; color: var(--ci-ink); letter-spacing: -.01em; }
 #cobrand .ci-sub {
   color: var(--text-faint); font-size: .62rem;
   letter-spacing: .06em; text-transform: uppercase;
@@ -448,7 +450,7 @@ img { max-width: 100%; display: block; }
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  box-shadow: 0 6px 18px rgba(242, 85, 29, .45);
+  box-shadow: 0 6px 18px rgba(35, 112, 50, .42);
 }
 .fab:active { transform: scale(.96); }
 
@@ -686,10 +688,11 @@ img { max-width: 100%; display: block; }
 }
 .login .logo {
   width: 76px; height: 76px; border-radius: 22px; margin: 0 auto 18px;
-  background: var(--accent); color: #fff;
-  display: flex; align-items: center; justify-content: center; font-size: 2.4rem;
-  box-shadow: 0 10px 24px rgba(242,85,29,.4);
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 10px 24px rgba(35,112,50,.35);
 }
+.login .logo img { width: 100%; height: 100%; }
 .login h1 { font-size: 1.5rem; margin: 0 0 4px; }
 .login p.lead { color: var(--text-muted); margin: 0 0 26px; }
 .login form { display: flex; flex-direction: column; gap: 12px; text-align: left; }
