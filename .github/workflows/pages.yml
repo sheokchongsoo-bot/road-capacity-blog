@@ -1,7 +1,9 @@
-name: Deploy 오이마켓 PWA (GitHub Pages)
+name: Deploy 사이트 (블로그 + 오이마켓 앱)
 
-# app/ 의 런타임 웹앱을 gh-pages 브랜치로 배포합니다.
-# 배포 후: 저장소 Settings → Pages → "Deploy from a branch" → gh-pages → / (root) 선택.
+# 한 GitHub Pages 사이트에 블로그(루트)와 오이마켓 앱(/app/)을 함께 배포한다.
+#   https://<user>.github.io/road-capacity-blog/       → 블로그
+#   https://<user>.github.io/road-capacity-blog/app/   → 오이마켓 앱(PWA)
+# Pages 설정은 "Deploy from a branch → gh-pages → /(root)" 그대로 유지.
 
 on:
   push:
@@ -23,19 +25,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Assemble PWA site (app/ 런타임만, 문서 제외)
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install blog build deps
+        run: npm install --no-audit --no-fund
+
+      - name: Build blog → dist/
+        run: node src/build.js
+
+      - name: Add 오이마켓 앱 under /app (문서 제외)
         run: |
-          rm -rf _site
-          mkdir -p _site
-          cp -R app/. _site/
-          rm -rf _site/docs        # 제안서·화면설계서 등 문서는 파일럿 사이트에서 제외
-          touch _site/.nojekyll      # GitHub Pages의 Jekyll 처리 비활성화
+          mkdir -p dist/app
+          cp -R app/. dist/app/
+          rm -rf dist/app/docs
+          touch dist/.nojekyll
 
       - name: Publish to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_site
+          publish_dir: ./dist
           publish_branch: gh-pages
           force_orphan: true
-          commit_message: "Deploy PWA (${{ github.sha }})"
+          commit_message: "Deploy blog + app (${{ github.sha }})"
