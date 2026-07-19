@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>제1강. 도로용량의 이해 · 도로용량분석의 이론과 실제</title>
+  <meta name="description" content="교통용량분석 첫 번째 강의. 도로용량과 서비스수준의 정의, 기본조건, 효과척도, 핵심 분석 파라미터를 도로용량편람(2013)과 미국 HCM 최신판을 바탕으로 정리한다." />
+  <link rel="stylesheet" href="../katex.min.css" />
+  <link rel="stylesheet" href="../styles.css" />
+  <!-- FOUC 방지: 스타일 적용 전에 저장된/선호 테마를 즉시 반영한다. -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = saved || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="../index.html">도로용량분석의 이론과 실제</a>
+    <button id="theme-toggle" class="theme-toggle" type="button"
+            aria-label="테마 전환" title="라이트/다크 전환">
+      <svg class="icon icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+      </svg>
+      <svg class="icon icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+      </svg>
+    </button>
+  </header>
+
+  <main class="site-main">
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title">제1강. 도로용량의 이해</h1>
+    <p class="post-meta">
+      <time datetime="2026-09-07">2026년 9월 7일</time>
+      <span class="tags"><span class="tag">#교통용량분석</span> <span class="tag">#강의</span> <span class="tag">#도로용량</span> <span class="tag">#서비스수준</span> <span class="tag">#HCM</span></span>
+    </p>
+  </header>
+  <div class="post-body">
+    <blockquote>
+<p><strong>강의 정보</strong> · 교통용량분석 · 제1강 (120분)
+<strong>교재</strong>: 『도로용량분석의 이론과 실제』 · <strong>근거 편람</strong>: 『도로용량편람』(2013) 제1장 개론
+<strong>참고</strong>: <em>Highway Capacity Manual, 7th Edition</em> (TRB, 2022, HCM 7)</p>
+</blockquote>
+<p>이번 강의는 앞으로 한 학기 동안 다룰 <strong>교통용량분석</strong>의 출발점입니다.
+&quot;도로가 얼마나 많은 교통량을 감당할 수 있는가?&quot;, 그리고 &quot;지금 이 도로는 얼마나
+잘 굴러가고 있는가?&quot;라는 두 질문에 공학적으로 답하는 언어를 배웁니다.</p>
+<h2>학습 목표</h2>
+<p>이 강의를 마치면 다음을 설명할 수 있어야 합니다.</p>
+<ol>
+<li><strong>도로용량</strong>(capacity)과 <strong>서비스수준</strong>(LOS)의 정의를 정확히 진술한다.</li>
+<li>용량 분석의 전제인 <strong>기본조건</strong>(이상적 조건)이 무엇인지 안다.</li>
+<li>서비스수준을 판정하는 <strong>효과척도</strong>(MOE)의 개념과, 고속도로에서 밀도를 주효과척도로 쓰는 이유를 안다.</li>
+<li>분석에 쓰이는 핵심 파라미터(AADT, DHV, K, D, PHF, 승용차환산계수)의 의미를 구분한다.</li>
+<li>우리나라 도로용량편람과 미국 HCM의 접근 방식을 비교한다.</li>
+</ol>
+<hr>
+<h2>1. 왜 도로용량을 분석하는가</h2>
+<p>도로용량편람은 용량 분석의 목적을 다음과 같이 밝히고 있습니다.</p>
+<blockquote>
+<p>용량을 분석하는 목적은 해당 도로의 용량을 명확히 밝힘으로써 도로를 효율적으로
+이용하고, 도로 투자를 적절히 하도록 하는 데 있다.</p>
+<p>— 도로용량편람(2013), 제1장</p>
+</blockquote>
+<p>즉 용량 분석은 두 가지 실무적 판단을 뒷받침합니다.</p>
+<ul>
+<li><strong>계획·설계</strong>: 장래 교통수요를 감당하려면 차로를 몇 개로 해야 하는가?</li>
+<li><strong>운영</strong>: 지금(혹은 장래) 이 도로의 교통 흐름은 어느 수준인가, 개선이 필요한가?</li>
+</ul>
+<p>용량 분석은 보통 <strong>두 단계의 연속된 절차</strong>로 이루어집니다. 먼저 주어진 도로가
+수용할 수 있는 <strong>최대 교통량</strong>을 추정하고, 다음으로 일정한 <strong>서비스수준</strong>을
+유지하기 위한 교통 운행 상태를 평가합니다.</p>
+<h2>2. 도로용량의 정의</h2>
+<p>도로용량편람은 용량을 두 가지 층위로 정의합니다. 하나는 일반적 정의이고,
+다른 하나는 분석에 실제로 쓰이는 조작적 정의입니다.</p>
+<blockquote>
+<p><strong>용량 (일반)</strong>: 도로의 한 지점 또는 일정 구간을 일정 시간에 통과할 수 있는
+최대 차량 수.</p>
+<p><strong>도로용량 (조작적 정의)</strong>: 주어진 도로 조건에서 <strong>15분 동안 무리 없이 최대로
+통과할 수 있는 승용차 교통량을 1시간 단위로 환산한 값.</strong></p>
+</blockquote>
+<p>정의를 뜯어보면 용량이라는 개념의 성격이 드러납니다.</p>
+<table>
+<thead>
+<tr>
+<th>표현</th>
+<th>의미</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;주어진 도로 조건에서&quot;</td>
+<td>용량은 <strong>조건 의존적</strong>이다. 절대 상수가 아니다.</td>
+</tr>
+<tr>
+<td>&quot;15분 동안&quot;</td>
+<td>첨두 15분의 최대 교통류율을 기준으로 한다 (짧은 첨두를 포착).</td>
+</tr>
+<tr>
+<td>&quot;무리 없이 최대로&quot;</td>
+<td>지속 가능한 최대치이며, 순간적 과포화가 아니다.</td>
+</tr>
+<tr>
+<td>&quot;승용차 교통량&quot;</td>
+<td>혼합 교통을 <strong>승용차 단위</strong>(pcphpl)로 환산해서 다룬다.</td>
+</tr>
+<tr>
+<td>&quot;1시간 단위로 환산&quot;</td>
+<td>최종 단위는 <strong>시간당 교통량</strong>이다.</td>
+</tr>
+</tbody></table>
+<p>여기서 자주 나오는 단위 <strong>pcphpl</strong>(<em>passenger cars per hour per lane</em>, 승용차/시/차로)를
+기억해 두세요. 용량과 서비스교통량을 비교할 때는 항상 단위를 일치시켜야 합니다.</p>
+<h2>3. 기본조건 (이상적 조건, Base / Ideal Conditions)</h2>
+<p>용량은 조건에 따라 달라지므로, 비교의 <strong>기준점</strong>이 필요합니다. 그 기준이
+<strong>기본조건</strong>입니다.</p>
+<blockquote>
+<p><strong>기본조건</strong>: 도로 조건과 교통 조건이 개선되더라도 더 이상 용량이 증가되지 않는
+조건.</p>
+</blockquote>
+<p>고속도로 기본구간의 기본조건은 다음과 같습니다.</p>
+<ul>
+<li>차로폭 <strong>3.5 m 이상</strong></li>
+<li>측방여유폭 <strong>1.5 m 이상</strong></li>
+<li>교통류가 <strong>승용차만으로</strong> 구성</li>
+<li><strong>평지</strong> (종단경사 &lt; 2%)</li>
+<li>양호한 노면·기후 상태</li>
+</ul>
+<p>이 기본조건에서 설계속도별 <strong>기본용량</strong>은 다음과 같이 정해집니다.</p>
+<table>
+<thead>
+<tr>
+<th>설계속도</th>
+<th>기본용량</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>120 km/h</td>
+<td><strong>2,300 pcphpl</strong></td>
+</tr>
+<tr>
+<td>100 km/h</td>
+<td><strong>2,200 pcphpl</strong></td>
+</tr>
+<tr>
+<td>80 km/h</td>
+<td><strong>2,000 pcphpl</strong></td>
+</tr>
+</tbody></table>
+<p>실제 도로는 대부분 기본조건을 만족하지 못합니다. 그래서 특정 구간의 용량은
+<strong>기본용량에 보정계수를 곱해</strong> 구합니다. 차로폭·측방여유폭 보정계수 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>W</mi></msub></mrow><annotation encoding="application/x-tex">f_W</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">W</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>와
+중차량 보정계수 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mrow><mi>H</mi><mi>V</mi></mrow></msub></mrow><annotation encoding="application/x-tex">f_{HV}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0813em;">H</span><span class="mord mathnormal mtight" style="margin-right:0.2222em;">V</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>가 대표적입니다.</p>
+<div class="math-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>c</mi><mo>=</mo><msub><mi>c</mi><mi>j</mi></msub><mo>×</mo><mi>N</mi><mo>×</mo><msub><mi>f</mi><mi>W</mi></msub><mo>×</mo><msub><mi>f</mi><mrow><mi>H</mi><mi>V</mi></mrow></msub></mrow><annotation encoding="application/x-tex">c = c_j \times N \times f_W \times f_{HV}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">c</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">W</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0813em;">H</span><span class="mord mathnormal mtight" style="margin-right:0.2222em;">V</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></div>
+<p>여기서 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>c</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">c_j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7167em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span>는 설계속도 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi></mrow><annotation encoding="application/x-tex">j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span></span></span></span>의 기본용량(pcphpl), <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span>은 편도 차로수입니다.</p>
+<h2>4. 서비스수준 (Level of Service, LOS)</h2>
+<p>용량이 &quot;얼마나 통과시킬 수 있는가&quot;라는 <strong>양적</strong> 개념이라면, 서비스수준은
+그 흐름의 <strong>질</strong>을 나타내는 개념입니다.</p>
+<blockquote>
+<p><strong>서비스수준</strong>: 도로를 이용하는 차량의 운행 상태의 질을 나타내는 기준. 통행속도,
+통행시간, 통행 자유도, 안락감, 교통안전 등의 서비스 상태를 설명하는 질적 개념.</p>
+</blockquote>
+<p>서비스수준은 <strong>A부터 F까지 6단계</strong>로 구분합니다.</p>
+<table>
+<thead>
+<tr>
+<th align="center">등급</th>
+<th>상태</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>A</strong></td>
+<td>자유 통행</td>
+<td>거의 방해받지 않음. 물리적·심리적으로 매우 편안.</td>
+</tr>
+<tr>
+<td align="center"><strong>B</strong></td>
+<td>안정 (양호)</td>
+<td>약간의 제한. 여전히 편안.</td>
+</tr>
+<tr>
+<td align="center"><strong>C</strong></td>
+<td>안정</td>
+<td>통행 자유도가 상당히 제한됨. 차로 변경에 주의 필요.</td>
+</tr>
+<tr>
+<td align="center"><strong>D</strong></td>
+<td>안정의 한계</td>
+<td>조금만 넘어도 불안정 교통류가 됨. 심리적 압박.</td>
+</tr>
+<tr>
+<td align="center"><strong>E</strong></td>
+<td>불안정</td>
+<td>용량 상태. 사소한 방해도 흡수하지 못함.</td>
+</tr>
+<tr>
+<td align="center"><strong>F</strong></td>
+<td>와해 (강제류)</td>
+<td>교통수요가 용량을 초과해 흐름이 붕괴. 대기행렬 발생.</td>
+</tr>
+</tbody></table>
+<p><strong>서비스수준 E와 F의 경계가 곧 용량 상태</strong>라는 점이 핵심입니다.</p>
+<h3>F를 다시 쪼개는 이유 — F, FF, FFF</h3>
+<p>우리나라 도시부 도로는 용량을 초과하는 경우가 잦아 서비스수준 F가 빈번합니다.
+그런데 같은 F여도 질적으로 크게 다를 수 있습니다. 예를 들어 신호교차로에서 평균
+접근지체가 신호 1주기를 갓 넘는 경우와 3–4주기 이상인 경우는 개선 대책이 전혀
+다릅니다. 그래서 도시 및 교외 간선도로 등 일부 도로 유형에서는 F를
+<strong>F, FF, FFF</strong>의 3단계로 세분해 제시합니다.</p>
+<h2>5. 효과척도 (Measure of Effectiveness, MOE)</h2>
+<p>서비스수준을 어떤 등급으로 판정하려면, 측정 가능한 <strong>대표 지표</strong>가 필요합니다.
+이것이 효과척도입니다.</p>
+<blockquote>
+<p><strong>효과척도(MOE)</strong>: 차량 통행 상태의 질을 나타내는 기준. 예) 운행속도, 지체,
+밀도, 교통량 대 용량비(V/C) 등.</p>
+</blockquote>
+<p>시설 유형마다 주효과척도가 다릅니다. 고속도로 기본구간의 주효과척도는
+<strong>밀도</strong>(density)입니다. 이유는 두 가지입니다.</p>
+<ul>
+<li>밀도는 앞뒤 차량 간 거리를 반영하므로, <strong>통행 자유도와 안전</strong> 측면을 잘 나타낸다.</li>
+<li>고속도로에서는 교통량이 늘어도 용량에 가까워질 때까지 <strong>속도 변화가 거의 없어</strong>,
+속도는 서비스수준을 구별하는 척도로 부적합하다.</li>
+</ul>
+<p>밀도의 단위는 <strong>pcpkmpl</strong>(승용차/km/차로)입니다.</p>
+<figure class="diagram">
+<svg viewBox="0 0 640 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="속도-교통량 관계 곡선">
+<line x1="70" y1="340" x2="600" y2="340" stroke="currentColor" stroke-width="1.5"/>
+<line x1="70" y1="340" x2="70" y2="40" stroke="currentColor" stroke-width="1.5"/>
+<path d="M 70 105 C 220 108, 360 118, 460 140 C 505 152, 528 168, 535 190" fill="none" stroke="var(--accent)" stroke-width="3.5"/>
+<path d="M 535 190 C 505 245, 340 300, 150 332" fill="none" stroke="var(--text-muted)" stroke-width="2.5" stroke-dasharray="7 5"/>
+<line x1="535" y1="340" x2="535" y2="95" stroke="currentColor" stroke-width="1" stroke-dasharray="5 5" opacity="0.5"/>
+<circle cx="535" cy="190" r="6" fill="var(--accent)"/>
+<g fill="currentColor" font-size="15">
+<text x="28" y="50">속도</text>
+<text x="555" y="368">교통량</text>
+<text x="535" y="366" text-anchor="middle" font-weight="bold">용량</text>
+<text x="130" y="330" text-anchor="middle">A</text>
+<text x="245" y="330" text-anchor="middle">B</text>
+<text x="345" y="330" text-anchor="middle">C</text>
+<text x="430" y="330" text-anchor="middle">D</text>
+<text x="500" y="330" text-anchor="middle">E</text>
+</g>
+<g stroke="currentColor" opacity="0.4">
+<line x1="190" y1="336" x2="190" y2="344"/><line x1="300" y1="336" x2="300" y2="344"/>
+<line x1="390" y1="336" x2="390" y2="344"/><line x1="470" y1="336" x2="470" y2="344"/>
+</g>
+<text x="200" y="70" fill="currentColor" font-size="14">용량 근처까지 속도 변화가 작다</text>
+<line x1="255" y1="78" x2="280" y2="105" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+<text x="300" y="290" fill="var(--text-muted)" font-size="14">혼잡류 (LOS F)</text>
+</svg>
+<figcaption>그림. 연속류의 속도–교통량 관계(개념도) — 용량에 가까워질 때까지 속도 변화가 작아, 고속도로에서는 밀도를 주효과척도로 쓴다.</figcaption>
+</figure>
+
+<h2>6. 서비스수준 판정표 — 고속도로 기본구간</h2>
+<p>아래는 도로용량편람 2013의 <strong>〈표 2-1〉 고속도로 기본구간의 서비스수준</strong>입니다.
+밀도를 기준으로 등급을 나누며, 설계속도별로 대응하는 교통량(pcphpl)과 V/C도
+함께 제시됩니다. (교통량·V/C 값은 <strong>기본조건</strong> 기준)</p>
+<table>
+<thead>
+<tr>
+<th align="center">LOS</th>
+<th align="center">밀도 (pcpkmpl)</th>
+<th align="center">120 km/h 교통량 · V/C</th>
+<th align="center">100 km/h 교통량 · V/C</th>
+<th align="center">80 km/h 교통량 · V/C</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">A</td>
+<td align="center">≤ 6</td>
+<td align="center">≤ 700 · ≤ 0.30</td>
+<td align="center">≤ 600 · ≤ 0.27</td>
+<td align="center">≤ 500 · ≤ 0.25</td>
+</tr>
+<tr>
+<td align="center">B</td>
+<td align="center">≤ 10</td>
+<td align="center">≤ 1,150 · ≤ 0.50</td>
+<td align="center">≤ 1,000 · ≤ 0.45</td>
+<td align="center">≤ 800 · ≤ 0.40</td>
+</tr>
+<tr>
+<td align="center">C</td>
+<td align="center">≤ 14</td>
+<td align="center">≤ 1,500 · ≤ 0.65</td>
+<td align="center">≤ 1,350 · ≤ 0.61</td>
+<td align="center">≤ 1,150 · ≤ 0.58</td>
+</tr>
+<tr>
+<td align="center">D</td>
+<td align="center">≤ 19</td>
+<td align="center">≤ 1,900 · ≤ 0.83</td>
+<td align="center">≤ 1,750 · ≤ 0.80</td>
+<td align="center">≤ 1,500 · ≤ 0.75</td>
+</tr>
+<tr>
+<td align="center">E</td>
+<td align="center">≤ 28</td>
+<td align="center">≤ 2,300 · ≤ 1.00</td>
+<td align="center">≤ 2,200 · ≤ 1.00</td>
+<td align="center">≤ 2,000 · ≤ 1.00</td>
+</tr>
+<tr>
+<td align="center">F</td>
+<td align="center">&gt; 28</td>
+<td align="center">—</td>
+<td align="center">—</td>
+<td align="center">—</td>
+</tr>
+</tbody></table>
+<p>읽는 법: 밀도가 12 pcpkmpl이면 (10 초과 14 이하) 서비스수준은 <strong>C</strong>입니다.
+설계속도 100 km/h 도로라면 이때 교통량은 대략 1,000–1,350 pcphpl 범위입니다.
+서비스수준 A–D의 최대 밀도 값은 관측 자료에, E의 최대 밀도 값은 용량 상태의
+예상 최대치에 근거합니다.</p>
+<h2>7. 분석에 필요한 핵심 파라미터</h2>
+<p>용량·서비스수준을 계산하려면 교통수요를 적절한 형태로 다듬어야 합니다. 자주
+쓰이는 값들을 정리합니다.</p>
+<h3>교통량의 여러 얼굴</h3>
+<ul>
+<li><strong>AADT</strong> (연평균 일교통량): 1년간 양방향 교통량을 365일로 나눈 값. 계획의 기초.</li>
+<li><strong>DHV</strong> (설계시간 교통량): 설계의 기초가 되는 장래 1시간 교통량.
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">D</mi><mi mathvariant="normal">H</mi><mi mathvariant="normal">V</mi></mrow><mo>=</mo><mrow><mi mathvariant="normal">A</mi><mi mathvariant="normal">A</mi><mi mathvariant="normal">D</mi><mi mathvariant="normal">T</mi></mrow><mo>×</mo><mi>K</mi></mrow><annotation encoding="application/x-tex">\mathrm{DHV} = \mathrm{AADT} \times K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord"><span class="mord mathrm" style="margin-right:0.0139em;">DHV</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord"><span class="mord mathrm">AADT</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span></span></span></span></li>
+<li><strong>DDHV</strong> (중방향 설계시간 교통량): 방향별 쏠림을 반영.
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">D</mi><mi mathvariant="normal">D</mi><mi mathvariant="normal">H</mi><mi mathvariant="normal">V</mi></mrow><mo>=</mo><mrow><mi mathvariant="normal">A</mi><mi mathvariant="normal">A</mi><mi mathvariant="normal">D</mi><mi mathvariant="normal">T</mi></mrow><mo>×</mo><mi>K</mi><mo>×</mo><mi>D</mi></mrow><annotation encoding="application/x-tex">\mathrm{DDHV} = \mathrm{AADT} \times K \times D</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord"><span class="mord mathrm" style="margin-right:0.0139em;">DDHV</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord"><span class="mord mathrm">AADT</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">D</span></span></span></span></li>
+</ul>
+<h3>K, D — 시간·방향 변동을 반영하는 계수</h3>
+<ul>
+<li><strong>설계시간계수 K</strong>: AADT에 대한 DHV의 비. 우리나라는 보통 1년 8,760시간 중
+교통량 순위 <strong>30번째 시간</strong>의 값을 쓰는 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mn>30</mn></msub></mrow><annotation encoding="application/x-tex">K_{30}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">30</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>를 적용합니다.
+K가 클수록 교통수요의 시간적 변동이 큽니다 (관광지 &gt; 지방 &gt; 도시 순).</li>
+<li><strong>중방향계수 D</strong>: 양방향 대비 교통량이 많은 방향(중방향)의 비율. 첨두시간에는
+대략 0.55–0.70. 편람 참고값은 도시지역 0.60, 지방지역 0.65.</li>
+</ul>
+<h3>PHF — 첨두시간계수 (Peak Hour Factor)</h3>
+<blockquote>
+<p><strong>PHF</strong>: 첨두시간 교통량을, 그 시간 내 가장 교통량이 많은 15분을 1시간으로
+환산한 값으로 나눈 비율.</p>
+</blockquote>
+<p>첨두 1시간 교통량을 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mn>60</mn></msub></mrow><annotation encoding="application/x-tex">V_{60}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">60</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>, 그 안에서 가장 많은 15분 교통량을 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mn>15</mn></msub></mrow><annotation encoding="application/x-tex">V_{15}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">15</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>라 하면,</p>
+<div class="math-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mrow><mi mathvariant="normal">P</mi><mi mathvariant="normal">H</mi><mi mathvariant="normal">F</mi></mrow><mo>=</mo><mfrac><msub><mi>V</mi><mn>60</mn></msub><mrow><mn>4</mn><mo>×</mo><msub><mi>V</mi><mn>15</mn></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">\mathrm{PHF} = \frac{V_{60}}{4 \times V_{15}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord"><span class="mord mathrm">PHF</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.1963em;vertical-align:-0.836em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">4</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">15</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">60</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+<p>PHF가 1.00에 가까울수록 그 1시간 안에서 교통량이 고르게 분포한다는 뜻입니다.
+첨두 15분의 강한 쏠림을 설계에 반영하기 위해, 수요 교통량을 PHF로 나눠
+<strong>첨두시간 환산 교통량</strong>(교통류율)을 구합니다.</p>
+<h3>승용차환산계수 (PCE) 와 중차량</h3>
+<blockquote>
+<p><strong>승용차환산계수(PCE)</strong>: 중차량 한 대와 대체될 수 있는 승용차 대수.</p>
+</blockquote>
+<p>트럭·버스 같은 중차량은 승용차보다 넓은 공간을 차지하고 가·감속 능력이 떨어져
+용량을 떨어뜨립니다. 도로용량편람은 중차량을 다음과 같이 분류합니다.</p>
+<table>
+<thead>
+<tr>
+<th>구분</th>
+<th>정의</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>소형</td>
+<td>2.5톤 미만 트럭, 16인승 미만 버스</td>
+</tr>
+<tr>
+<td>중형</td>
+<td>2.5톤 이상 트럭, 16인승 이상 버스</td>
+</tr>
+<tr>
+<td>대형</td>
+<td>세미 트레일러 또는 풀 트레일러</td>
+</tr>
+</tbody></table>
+<p>지형은 <strong>평지</strong>(&lt;2%), <strong>구릉지</strong>(2–5%), <strong>산지</strong>(≥5%)로 나누며, 종단경사 3% 이상·
+길이 500 m 이상인 곳은 <strong>특정 경사 구간</strong>으로 따로 분석합니다. 구체적인 PCE
+값과 중차량 보정계수(f_HV) 산정은 제2강(고속도로 기본구간)에서 다룹니다.</p>
+<h2>8. 분석의 두 방향</h2>
+<p>같은 이론을 두 방향으로 쓸 수 있습니다.</p>
+<ul>
+<li><strong>운영 분석 (LOS)</strong>: 도로 조건과 교통량이 주어졌을 때, 현재/장래의
+<strong>서비스수준을 판정</strong>한다.</li>
+<li><strong>계획·설계 분석 (N)</strong>: 목표 서비스수준과 장래 교통수요가 주어졌을 때,
+필요한 <strong>차로수를 결정</strong>한다.</li>
+</ul>
+<p>서비스교통량은 다음과 같이 계산합니다.</p>
+<div class="math-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mrow><mi mathvariant="normal">M</mi><mi mathvariant="normal">S</mi><mi mathvariant="normal">F</mi></mrow><mi>i</mi></msub><mo>=</mo><msub><mi>c</mi><mi>j</mi></msub><mo>×</mo><mo stretchy="false">(</mo><mi>V</mi><mi mathvariant="normal">/</mi><mi>c</mi><msub><mo stretchy="false">)</mo><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\mathrm{MSF}_i = c_j \times (V/c)_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">MSF</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord mathnormal">c</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></div>
+<div class="math-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mrow><mi mathvariant="normal">S</mi><mi mathvariant="normal">F</mi></mrow><mi>i</mi></msub><mo>=</mo><msub><mrow><mi mathvariant="normal">M</mi><mi mathvariant="normal">S</mi><mi mathvariant="normal">F</mi></mrow><mi>i</mi></msub><mo>×</mo><mi>N</mi><mo>×</mo><msub><mi>f</mi><mi>W</mi></msub><mo>×</mo><msub><mi>f</mi><mrow><mi>H</mi><mi>V</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\mathrm{SF}_i = \mathrm{MSF}_i \times N \times f_W \times f_{HV}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">SF</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">MSF</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">W</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0813em;">H</span><span class="mord mathnormal mtight" style="margin-right:0.2222em;">V</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></div>
+<p>여기서 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi mathvariant="normal">M</mi><mi mathvariant="normal">S</mi><mi mathvariant="normal">F</mi></mrow><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\mathrm{MSF}_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">MSF</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>는 기본조건에서의 최대 서비스교통량(pcphpl), <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi mathvariant="normal">S</mi><mi mathvariant="normal">F</mi></mrow><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\mathrm{SF}_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">SF</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>는
+주어진 조건의 서비스교통량(vph)이다. <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>c</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">c_j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7167em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span>는 설계속도 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi></mrow><annotation encoding="application/x-tex">j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span></span></span></span>의 기본용량, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>V</mi><mi mathvariant="normal">/</mi><mi>c</mi><msub><mo stretchy="false">)</mo><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">(V/c)_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord mathnormal">c</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>는
+서비스수준 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span>의 교통량 대 용량비, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span>은 편도 차로수입니다.</p>
+<hr>
+<h2>9. 미국 HCM과의 비교</h2>
+<p>우리나라 도로용량편람은 미국의 <strong>Highway Capacity Manual (HCM)</strong> 체계를 우리
+도로·교통 여건에 맞게 정립한 것입니다. 최신판은
+<strong>HCM 7판</strong>(<em>A Guide for Multimodal Mobility Analysis</em>, TRB, 2022)으로, 개념의
+뼈대는 같지만 몇 가지 차이가 있습니다.</p>
+<h3>같은 점 — 개념의 골격</h3>
+<ul>
+<li>용량을 <strong>15분 첨두 교통류율의 1시간 환산 최대치</strong>로 정의한다.</li>
+<li><strong>기본조건</strong>을 기준으로, 보정을 통해 실제 조건의 용량을 구한다.</li>
+<li>서비스수준을 <strong>A–F 6단계</strong>로 나누고, 고속도로 기본구간은 <strong>밀도</strong>를 주효과척도로
+판정한다.</li>
+</ul>
+<h3>다른 점 — 값과 단위, 그리고 범위</h3>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>도로용량편람 2013 (KHCM)</th>
+<th>HCM 7판 (US)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>밀도 단위</td>
+<td>승용차/km/차로 (pcpkmpl)</td>
+<td>승용차/mile/차로 (pc/mi/ln)</td>
+</tr>
+<tr>
+<td>기본 차로폭</td>
+<td>3.5 m 이상</td>
+<td>12 ft (약 3.66 m) 이상</td>
+</tr>
+<tr>
+<td>기본용량</td>
+<td>설계속도 기준 2,000–2,300 pcphpl</td>
+<td><strong>자유속도(FFS)</strong> 기준 2,250–2,400 pc/h/ln</td>
+</tr>
+<tr>
+<td>LOS 기준 변수</td>
+<td>설계속도</td>
+<td>자유속도(FFS)</td>
+</tr>
+</tbody></table>
+<p>HCM의 고속도로 기본구간 <strong>밀도 기준 서비스수준</strong>은 다음과 같습니다(자유속도와
+무관하게 동일한 밀도 경계 사용).</p>
+<table>
+<thead>
+<tr>
+<th align="center">LOS</th>
+<th align="center">밀도 (pc/mi/ln)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">A</td>
+<td align="center">≤ 11</td>
+</tr>
+<tr>
+<td align="center">B</td>
+<td align="center">≤ 18</td>
+</tr>
+<tr>
+<td align="center">C</td>
+<td align="center">≤ 26</td>
+</tr>
+<tr>
+<td align="center">D</td>
+<td align="center">≤ 35</td>
+</tr>
+<tr>
+<td align="center">E</td>
+<td align="center">≤ 45 (용량)</td>
+</tr>
+<tr>
+<td align="center">F</td>
+<td align="center">&gt; 45</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>주의</strong>: 두 편람의 밀도 숫자를 직접 비교하려면 단위를 통일해야 합니다.
+예) HCM의 45 pc/mi/ln ≈ 28 pcpkmpl (1 mile ≈ 1.609 km). 우리 편람의 용량 상태
+밀도(≤ 28 pcpkmpl)와 사실상 같은 값이라는 점이 흥미롭습니다.</p>
+</blockquote>
+<p>또한 HCM 7판은 6판 대비 다음을 강화했습니다. 강의 후반부 주제와 연결됩니다.</p>
+<ul>
+<li><strong>다수단(multimodal)</strong> 분석: 승용차뿐 아니라 보행·자전거·대중교통을 포괄.</li>
+<li><strong>네트워크 분석</strong>: 고속도로–간선도로 간 대기행렬 전파(spillback), 시설 간 통행시간,
+차로별(lane-by-lane) 분석.</li>
+<li><strong>자율주행차</strong>(CAV)가 용량에 미치는 영향에 대한 지침 반영.</li>
+</ul>
+<hr>
+<h2>10. 요약</h2>
+<ul>
+<li><strong>용량</strong>은 주어진 조건에서 15분 첨두를 1시간으로 환산한 <strong>최대 승용차 교통량</strong>이며,
+조건에 따라 달라진다.</li>
+<li>비교 기준은 <strong>기본조건</strong>이고, 실제 용량은 기본용량에 <strong>보정계수</strong>를 곱해 구한다.</li>
+<li><strong>서비스수준</strong>(A–F)은 흐름의 질을 나타내며, 고속도로 기본구간은 <strong>밀도</strong>로 판정한다.</li>
+<li>분석에는 AADT·DHV·K·D·PHF·PCE 등 수요를 다듬는 여러 파라미터가 쓰인다.</li>
+<li>우리 편람은 미국 HCM과 골격을 공유하되, <strong>단위·기준값·적용 범위</strong>에서 차이가 있다.</li>
+</ul>
+<h2>다음 강 예고</h2>
+<p><strong>제2강. 고속도로 기본구간 (1) — 용량과 보정계수</strong> — 오늘 배운 개념을 실제 계산으로
+옮깁니다. 기본용량에서 출발해 차로폭·측방여유폭 보정계수(<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>W</mi></msub></mrow><annotation encoding="application/x-tex">f_W</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">W</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)와 중차량 보정계수
+(<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mrow><mi>H</mi><mi>V</mi></mrow></msub></mrow><annotation encoding="application/x-tex">f_{HV}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0813em;">H</span><span class="mord mathnormal mtight" style="margin-right:0.2222em;">V</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)를 구해 실제 구간의 용량을 산정합니다. (서비스수준 판정과 차로수 결정은
+제3강에서 이어집니다.)</p>
+<h3>복습 문제</h3>
+<ol>
+<li>도로용량의 정의에서 &quot;15분&quot;과 &quot;승용차 교통량&quot;이 각각 왜 들어갔는지 설명하시오.</li>
+<li>고속도로 기본구간에서 속도가 아니라 밀도를 주효과척도로 쓰는 이유는?</li>
+<li>설계속도 100 km/h 고속도로에서 밀도가 16 pcpkmpl로 측정되었다. 서비스수준은?</li>
+<li>PHF가 0.80인 도로와 0.95인 도로 중, 첨두 15분의 교통 쏠림이 더 심한 쪽은?</li>
+<li>우리 편람의 용량 상태 밀도(28 pcpkmpl)와 HCM의 45 pc/mi/ln가 사실상 같은
+값임을 단위 환산으로 보이시오.</li>
+</ol>
+<hr>
+<p><em>출처: 『도로용량편람』, 국토교통부, 2013 (제1장 개론, 제2장 고속도로 기본구간).
+Transportation Research Board, &quot;Highway Capacity Manual, 7th Edition: A Guide for
+Multimodal Mobility Analysis&quot;, 2022.</em></p>
+
+  </div>
+  <p class="post-back"><a href="../index.html">← 목록으로</a></p>
+</article>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>도로용량분석의 이론과 실제 · 교통용량분석 강의 노트</p>
+  </footer>
+
+  <script src="../theme.js"></script>
+</body>
+</html>

@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>제12강. 비신호교차로·회전교차로 · 도로용량분석의 이론과 실제</title>
+  <meta name="description" content="신호 없이 간격수락으로 운영되는 비신호교차로(양방향정지·무통제)와 회전교차로의 분석 원리, 효과척도와 서비스수준 판정을 도로용량편람 2013 제10·11장으로 정리한다." />
+  <link rel="stylesheet" href="../katex.min.css" />
+  <link rel="stylesheet" href="../styles.css" />
+  <!-- FOUC 방지: 스타일 적용 전에 저장된/선호 테마를 즉시 반영한다. -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = saved || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="../index.html">도로용량분석의 이론과 실제</a>
+    <button id="theme-toggle" class="theme-toggle" type="button"
+            aria-label="테마 전환" title="라이트/다크 전환">
+      <svg class="icon icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+      </svg>
+      <svg class="icon icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+      </svg>
+    </button>
+  </header>
+
+  <main class="site-main">
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title">제12강. 비신호교차로·회전교차로</h1>
+    <p class="post-meta">
+      <time datetime="2026-11-30">2026년 11월 30일</time>
+      <span class="tags"><span class="tag">#교통용량분석</span> <span class="tag">#강의</span> <span class="tag">#비신호교차로</span> <span class="tag">#회전교차로</span> <span class="tag">#간격수락</span> <span class="tag">#서비스수준</span></span>
+    </p>
+  </header>
+  <div class="post-body">
+    <blockquote>
+<p><strong>강의 정보</strong> · 교통용량분석 · 제12강 (120분)
+<strong>교재</strong>: 『도로용량분석의 이론과 실제』 · <strong>근거 편람</strong>: 『도로용량편람』(2013) 제10장 비신호교차로 · 제11장 회전교차로
+<strong>선행 학습</strong>: <a href="lecture-11-signalized-4.html">제11강. 신호교차로 (4)</a></p>
+</blockquote>
+<p>신호교차로를 마치고, 이제 <strong>신호 없이</strong> 운영되는 교차로를 봅니다. 통행권을 시간으로
+배분해 주는 신호가 없으므로, 운전자는 상충 교통류의 <strong>차간시간(gap)을 스스로 골라</strong>
+통과해야 합니다. 이 원리가 <strong>간격수락</strong>이며, 비신호교차로와 회전교차로 분석의
+공통 기반입니다.</p>
+<h2>학습 목표</h2>
+<ol>
+<li><strong>간격수락 이론</strong>의 핵심 개념(임계간격·추종시간)을 안다.</li>
+<li><strong>양방향정지·무통제 교차로</strong>의 효과척도와 서비스수준을 판정한다.</li>
+<li><strong>회전교차로</strong>의 운영 원리와 용량·서비스수준 분석을 이해한다.</li>
+</ol>
+<hr>
+<h2>1. 간격수락 이론 — 공통 원리</h2>
+<p>신호가 없으면 부도로(또는 진입로) 차량은 우선권 있는 교통류의 <strong>차간시간</strong>을 이용해
+횡단·합류합니다. 이때 두 파라미터가 분석의 핵심입니다.</p>
+<ul>
+<li><strong>임계간격(critical gap)</strong> — 진입(횡단)이 가능한 차두시간의 <strong>최소값</strong>. 이보다 크면
+진입하고, 작으면 기다린다.</li>
+<li><strong>추종시간(follow-up time)</strong> — 하나의 긴 차간시간에 <strong>두 대 이상이 연속 진입</strong>할 때의
+최소 차두시간.</li>
+</ul>
+<p>상충 교통량이 많을수록 쓸 만한 간격이 드물어져 <strong>용량이 줄어드는</strong> 구조입니다.</p>
+<h2>2. 비신호교차로</h2>
+<h3>유형과 분석 대상</h3>
+<p>비신호교차로는 <strong>무통제 · 양방향정지 · 전방향정지 · 로터리식</strong>의 네 유형으로 나뉘며,
+편람은 국내 대표 유형인 <strong>무통제 교차로</strong>와 <strong>양방향정지 교차로</strong>의 분석 방법을
+제시합니다. 중차량은 승용차환산계수 <strong>1.8</strong>을 일괄 적용합니다.</p>
+<h3>양방향정지 교차로</h3>
+<p>주도로 차량이 우선하고, 부도로 진입 차량과 주도로 좌회전 차량이 기다리는 방식입니다.
+<strong>진입 우선순위</strong>는 다음과 같습니다.</p>
+<ol>
+<li>부도로 우회전 → 2. 주도로 좌회전 → 3. 부도로 직진 → 4. 부도로 좌회전</li>
+</ol>
+<p>분석은 8단계로 진행합니다: 자료 입력 → <strong>상충교통류 산정</strong> → <strong>임계간격·추종시간</strong> →
+이동류의 <strong>잠재용량</strong> → 저항계수 → 차로배분용량 → <strong>운영지체</strong> → 서비스수준 판정.</p>
+<p>효과척도는 <strong>평균운영지체</strong>이며, 서비스수준은 〈표 10-2〉로 판정합니다.</p>
+<table>
+<thead>
+<tr>
+<th align="center">서비스수준</th>
+<th align="center">평균운영지체 (초/대)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">A</td>
+<td align="center">≤ 10</td>
+</tr>
+<tr>
+<td align="center">B</td>
+<td align="center">≤ 15</td>
+</tr>
+<tr>
+<td align="center">C</td>
+<td align="center">≤ 25</td>
+</tr>
+<tr>
+<td align="center">D</td>
+<td align="center">≤ 35</td>
+</tr>
+<tr>
+<td align="center">E</td>
+<td align="center">≤ 50</td>
+</tr>
+<tr>
+<td align="center">F</td>
+<td align="center">&gt; 50</td>
+</tr>
+</tbody></table>
+<p>신호교차로(A ≤ 15초)보다 기준이 <strong>엄격</strong>합니다. 비신호교차로 이용자는 지체에 대한
+기대 수준이 다르기 때문입니다. 또한 비신호교차로에서는 <strong>서비스수준 E를 용량 상태로
+정의할 수 없습니다</strong>.</p>
+<h3>무통제 교차로</h3>
+<p>통제 시설이 전혀 없는, 교통량이 적은 교차로입니다. 효과척도는 <strong>교차로 진입 교통량</strong>과
+<strong>시간당 상충횟수</strong>입니다. 분석은 네 단계로 간단합니다: 방향별 교통량 입력 → 중차량
+보정(PCE 1.8) → <strong>주도로 교통량비</strong> 산정 → 서비스수준 판정(〈표 10-4〉).</p>
+<p>〈표 10-4〉 무통제 교차로의 서비스수준 (교차로 총 진입교통량, vph)</p>
+<table>
+<thead>
+<tr>
+<th align="center">LOS</th>
+<th align="center">주도로 비율 &lt; 60%</th>
+<th align="center">&lt; 70%</th>
+<th align="center">≥ 70%</th>
+<th align="center">시간당 상충횟수</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">A</td>
+<td align="center">≤ 320</td>
+<td align="center">≤ 360</td>
+<td align="center">≤ 400</td>
+<td align="center">≤ 60</td>
+</tr>
+<tr>
+<td align="center">B</td>
+<td align="center">≤ 640</td>
+<td align="center">≤ 720</td>
+<td align="center">≤ 800</td>
+<td align="center">≤ 120</td>
+</tr>
+<tr>
+<td align="center">C</td>
+<td align="center">≤ 960</td>
+<td align="center">≤ 1,080</td>
+<td align="center">≤ 1,200</td>
+<td align="center">≤ 180</td>
+</tr>
+<tr>
+<td align="center">D</td>
+<td align="center">≤ 1,280</td>
+<td align="center">≤ 1,440</td>
+<td align="center">≤ 1,600</td>
+<td align="center">≤ 240</td>
+</tr>
+<tr>
+<td align="center">E</td>
+<td align="center">≤ 1,600</td>
+<td align="center">≤ 1,800</td>
+<td align="center">≤ 2,000</td>
+<td align="center">≤ 300</td>
+</tr>
+<tr>
+<td align="center">F</td>
+<td align="center">&gt; 1,600</td>
+<td align="center">&gt; 1,800</td>
+<td align="center">&gt; 2,000</td>
+<td align="center">&gt; 300</td>
+</tr>
+</tbody></table>
+<p><strong>주도로 교통량비가 높을수록</strong> 같은 서비스수준에서 더 많은 교통량을 처리합니다 —
+교통량이 한 방향에 몰릴수록 상충이 줄어들기 때문입니다.</p>
+<h3>예제 1 — 무통제 교차로</h3>
+<blockquote>
+<p><strong>문제.</strong> 네갈래 무통제 교차로. 승용차 환산 후 방향별 진입교통량이 A·B 가로 400 vph,
+C·D 가로 600 vph이다. 서비스수준은?</p>
+</blockquote>
+<p><strong>주도로 판정</strong> — C·D 가로(600)가 A·B(400)보다 크므로 주도로.</p>
+<div class="math-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>주도로 교통량비</mtext><mo>=</mo><mfrac><mn>600</mn><mrow><mn>400</mn><mo>+</mo><mn>600</mn></mrow></mfrac><mo>=</mo><mn>60</mn><mi mathvariant="normal">%</mi></mrow><annotation encoding="application/x-tex">\text{주도로 교통량비} = \frac{600}{400 + 600} = 60\%</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord hangul_fallback">주도로</span><span class="mord"> </span><span class="mord hangul_fallback">교통량비</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0908em;vertical-align:-0.7693em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">400</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">600</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">600</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8056em;vertical-align:-0.0556em;"></span><span class="mord">60%</span></span></span></span></span></div>
+<p><strong>판정</strong> — 총 진입교통량 1,000 vph, 주도로 비율 60%(&lt; 70% 열 적용)에서 C(≤ 1,080)에
+해당하므로 <strong>서비스수준 C</strong>입니다.</p>
+<h2>3. 회전교차로</h2>
+<h3>정의와 운영 원리</h3>
+<blockquote>
+<p><strong>회전교차로</strong>: 신호 없이 교차로 중앙의 <strong>원형교통섬</strong>을 중심으로 회전하여 통과하는
+평면교차로. <strong>진입 차량이 회전 중인 차량에게 양보</strong>하는 것이 기본 원리다.</p>
+</blockquote>
+<p>통행우선권이 <strong>회전차로 내부의 회전교통류</strong>에 있으므로, 진입 차량은 회전차로에
+안전한 간격이 생길 때까지 정지선에서 대기합니다. 일반 교차로보다 <strong>상충 횟수가 현저히
+적고</strong> 저속으로 운영되어 안전합니다.</p>
+<figure class="diagram">
+<svg viewBox="0 0 640 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="회전교차로 통행우선권">
+<circle cx="320" cy="190" r="105" fill="none" stroke="currentColor" stroke-width="2"/>
+<circle cx="320" cy="190" r="45" fill="var(--bg-subtle)" stroke="var(--border)" stroke-width="2"/>
+<g stroke="currentColor" stroke-width="2">
+<line x1="30" y1="175" x2="216" y2="175"/><line x1="30" y1="205" x2="216" y2="205"/>
+<line x1="424" y1="175" x2="610" y2="175"/><line x1="424" y1="205" x2="610" y2="205"/>
+<line x1="305" y1="20" x2="305" y2="86"/><line x1="335" y1="20" x2="335" y2="86"/>
+<line x1="305" y1="294" x2="305" y2="360"/><line x1="335" y1="294" x2="335" y2="360"/>
+</g>
+<g stroke="var(--accent)" stroke-width="3.5" fill="none">
+<path d="M395 190 A75 75 0 0 0 320 115"/>
+<path d="M245 190 A75 75 0 0 0 320 265"/>
+</g>
+<polygon points="312,115 326,108 326,122" fill="var(--accent)"/>
+<polygon points="328,265 314,258 314,272" fill="var(--accent)"/>
+<rect x="308" y="316" width="24" height="38" rx="5" fill="var(--text-muted)"/>
+<line x1="303" y1="300" x2="337" y2="300" stroke="var(--accent)" stroke-width="3.5" stroke-dasharray="6 5"/>
+<text x="475" y="112" fill="currentColor" font-size="14">회전교통류 우선</text>
+<line x1="470" y1="118" x2="392" y2="140" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+<text x="350" y="340" fill="currentColor" font-size="14">진입차: 회전차에 양보</text>
+<text x="320" y="196" fill="var(--text-muted)" font-size="12" text-anchor="middle">중앙교통섬</text>
+</svg>
+<figcaption>그림. 회전교차로의 통행우선권(개념도) — 회전차로를 도는 차량이 우선이며, 진입 차량은 양보선에서 안전한 간격을 기다린다(반시계 방향).</figcaption>
+</figure>
+
+<p>기본유형은 소형·<strong>1차로형</strong>·<strong>2차로형</strong>으로 나뉘며, 편람은 1차로형(계획교통량 일 2만 대
+수준)과 2차로형(일 3.2만 대 수준)의 분석 방법을 제시합니다.</p>
+<h3>용량 분석 — 간격수락 모형</h3>
+<p>진입로 용량은 <strong>간격수락 이론</strong>에 근거한 분석적 모형(식 11-2)으로 구합니다. 입력은
+<strong>상충교통량</strong>(진입 교통류와 상충하는 회전교통류, 식 11-1), 운전자 특성 파라미터,
+진입차로수·횡단보행자 영향계수입니다. 편람이 제시하는 파라미터는 다음과 같습니다.</p>
+<table>
+<thead>
+<tr>
+<th>파라미터</th>
+<th align="center">1차로형</th>
+<th align="center">2차로형</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>임계간격 (초)</td>
+<td align="center">3.21</td>
+<td align="center">3.21</td>
+</tr>
+<tr>
+<td>추종시간 (초)</td>
+<td align="center">3.15</td>
+<td align="center">3.15</td>
+</tr>
+<tr>
+<td>회전차로 최소 차두간격 (초)</td>
+<td align="center">2.05</td>
+<td align="center">2.05</td>
+</tr>
+<tr>
+<td>진입차로수 영향계수</td>
+<td align="center">1.0</td>
+<td align="center">1.7</td>
+</tr>
+</tbody></table>
+<p><strong>상충교통량이 클수록 진입 용량이 작아지고</strong>, 2차로형은 진입차로수 영향계수(1.7)만큼
+용량이 커집니다(단, 2배가 아닌 이유는 바깥차로로 이용이 몰리기 때문).</p>
+<h3>서비스수준 — 〈표 11-1〉</h3>
+<p>효과척도는 신호교차로와 같은 <strong>차량당 평균지체</strong>입니다. 접근로별 지체를 교통량
+가중평균해 교차로 평균지체를 구하고, 6단계로 판정합니다.</p>
+<table>
+<thead>
+<tr>
+<th align="center">서비스수준</th>
+<th align="center">평균지체 (초/대)</th>
+<th align="center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mi mathvariant="normal">/</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">V/c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord mathnormal">c</span></span></span></span></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">A</td>
+<td align="center">≤ 10</td>
+<td align="center">≤ 1.0</td>
+</tr>
+<tr>
+<td align="center">B</td>
+<td align="center">≤ 15</td>
+<td align="center">≤ 1.0</td>
+</tr>
+<tr>
+<td align="center">C</td>
+<td align="center">≤ 25</td>
+<td align="center">≤ 1.0</td>
+</tr>
+<tr>
+<td align="center">D</td>
+<td align="center">≤ 35</td>
+<td align="center">≤ 1.0</td>
+</tr>
+<tr>
+<td align="center">E</td>
+<td align="center">≤ 50</td>
+<td align="center">≤ 1.0</td>
+</tr>
+<tr>
+<td align="center">F</td>
+<td align="center">&gt; 50</td>
+<td align="center">&gt; 1.0</td>
+</tr>
+</tbody></table>
+<p>양방향정지 교차로(〈표 10-2〉)와 같은 지체 경계를 씁니다.</p>
+<h3>예제 2 — 회전교차로 서비스수준</h3>
+<blockquote>
+<p><strong>문제.</strong> 1차로형 회전교차로의 접근로별 평균지체가 북 12초(400 vph), 남 8초(300 vph),
+동 20초(500 vph), 서 15초(300 vph)로 산출되었다. 교차로 서비스수준은?</p>
+</blockquote>
+<p><strong>교차로 평균지체</strong> — 접근로 지체를 교통량으로 가중평균.</p>
+<div class="math-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>d</mi><mo>=</mo><mfrac><mrow><mn>12</mn><mo>×</mo><mn>400</mn><mo>+</mo><mn>8</mn><mo>×</mo><mn>300</mn><mo>+</mo><mn>20</mn><mo>×</mo><mn>500</mn><mo>+</mo><mn>15</mn><mo>×</mo><mn>300</mn></mrow><mrow><mn>400</mn><mo>+</mo><mn>300</mn><mo>+</mo><mn>500</mn><mo>+</mo><mn>300</mn></mrow></mfrac><mo>=</mo><mfrac><mn>21,700</mn><mn>1,500</mn></mfrac><mo>≈</mo><mn>14.5</mn><mtext> 초/대</mtext></mrow><annotation encoding="application/x-tex">d = \frac{12 \times 400 + 8 \times 300 + 20 \times 500 + 15 \times 300}{400 + 300 + 500 + 300}
+= \frac{21{,}700}{1{,}500} \approx 14.5 \ \text{초/대}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0908em;vertical-align:-0.7693em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">400</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">300</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">500</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">300</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">12</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">400</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">8</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">300</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">20</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">500</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">15</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">300</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.2019em;vertical-align:-0.8804em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">500</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">21</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">700</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.8804em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">14.5</span><span class="mspace"> </span><span class="mord text"><span class="mord hangul_fallback">초</span><span class="mord">/</span><span class="mord hangul_fallback">대</span></span></span></span></span></span></div>
+<p><strong>판정</strong> — 〈표 11-1〉에서 14.5초는 B(≤ 15)에 해당하므로 <strong>서비스수준 B</strong>입니다.</p>
+<h2>4. 세 교차로 비교</h2>
+<table>
+<thead>
+<tr>
+<th>시설</th>
+<th>통행권 배분</th>
+<th>효과척도</th>
+<th align="center">LOS 등급</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>신호교차로</td>
+<td>신호(시간 배분)</td>
+<td>차량당 제어지체</td>
+<td align="center">A–FFF 8단계</td>
+</tr>
+<tr>
+<td>양방향정지 교차로</td>
+<td>우선순위 + 간격수락</td>
+<td>평균운영지체</td>
+<td align="center">A–F 6단계</td>
+</tr>
+<tr>
+<td>무통제 교차로</td>
+<td>선착순 + 운전자 판단</td>
+<td>진입 교통량·상충횟수</td>
+<td align="center">A–F 6단계</td>
+</tr>
+<tr>
+<td>회전교차로</td>
+<td>회전차량 우선 + 간격수락</td>
+<td>차량당 평균지체</td>
+<td align="center">A–F 6단계</td>
+</tr>
+</tbody></table>
+<p>교통량이 적을 때는 비신호·회전교차로가 지체가 작고 효율적이지만, 교통량이 늘면
+간격이 부족해져 신호 운영이 필요해집니다.</p>
+<h2>5. 요약</h2>
+<ul>
+<li>신호가 없는 교차로는 <strong>간격수락</strong>(임계간격·추종시간)으로 통행권을 얻는다.</li>
+<li><strong>양방향정지 교차로</strong>는 평균운영지체(〈표 10-2〉), <strong>무통제 교차로</strong>는 진입 교통량·
+상충횟수(〈표 10-4〉)로 판정하며, 중차량 PCE는 일괄 <strong>1.8</strong>이다.</li>
+<li><strong>회전교차로</strong>는 회전차량 우선 원칙 아래 간격수락 모형으로 용량을 구하고, 신호교차로와
+같은 <strong>평균지체</strong>로 서비스수준(A–F)을 판정한다.</li>
+<li>비신호 계열에서는 <strong>서비스수준 E ≠ 용량 상태</strong>임에 유의한다.</li>
+</ul>
+<h2>참고 — 미국 HCM(7판)과의 비교</h2>
+<ul>
+<li>비신호·회전교차로의 지체 기준(10 / 15 / 25 / 35 / 50초)은 <strong>KHCM과 동일</strong>합니다 —
+KHCM이 이 기준 체계를 준용했습니다.</li>
+<li>단, HCM은 <strong>포화도가 1.0을 넘으면 지체가 작아도 LOS F</strong>로 처리합니다.</li>
+<li>회전교차로 용량은 임계간격·추종시간에서 유도한 <strong>지수 회귀모형</strong>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mi>A</mi><mtext> </mtext><msup><mi>e</mi><mrow><mo>−</mo><mi>B</mi><mtext> </mtext><msub><mi>v</mi><mi>c</mi></msub></mrow></msup></mrow><annotation encoding="application/x-tex">c = A\,e^{-B\,v_c}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">c</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight" style="margin-right:0.0502em;">B</span><span class="mspace mtight" style="margin-right:0.1952em;"></span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0359em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1645em;"><span style="top:-2.357em;margin-left:-0.0359em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">c</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span> 형태이며, 미국 운전자의 임계간격이 한국 관측값(3.21초)보다
+길게 나타나 같은 상충교통량에서도 용량이 다르게 산정됩니다.</li>
+<li>7판에서 회전교차로와 램프 터미널(연결로-일반도로 접속부) 방법이 갱신되었습니다.</li>
+</ul>
+<h2>다음 강 예고</h2>
+<p><strong>제13강. 도로용량분석의 종합 정리</strong> — 한 학기 동안 배운 연속류(고속도로·다차로·
+2차로도로)와 단속류(신호·비신호·회전교차로)의 분석 절차, 핵심 공식·표를 총정리하고
+빈출 유형을 짚습니다. 기말고사 대비의 마지막 강의입니다.</p>
+<h3>복습 문제</h3>
+<ol>
+<li>임계간격과 추종시간의 차이를 설명하시오.</li>
+<li>양방향정지 교차로에서 부도로 좌회전의 우선순위가 가장 낮은 이유는? (상충 관점)</li>
+<li>무통제 교차로에서 주도로 교통량비가 높을수록 처리 가능 교통량이 커지는 이유는?</li>
+<li>예제 1에서 C·D 가로 교통량이 700 vph로 늘면(총 1,100, 비율 약 64%) 서비스수준은?</li>
+<li>회전교차로 진입 용량이 상충교통량에 반비례하는 이유를 간격수락 이론으로 설명하시오.</li>
+</ol>
+<hr>
+<p><em>출처: 『도로용량편람』, 국토교통부, 2013, 제10장 비신호교차로(유형·우선순위, 〈표 10-2〉·
+〈표 10-4〉 서비스수준) · 제11장 회전교차로(통행우선권, 식 11-1·11-2, 〈표 11-1〉·〈표 11-2〉).</em></p>
+
+  </div>
+  <p class="post-back"><a href="../index.html">← 목록으로</a></p>
+</article>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>도로용량분석의 이론과 실제 · 교통용량분석 강의 노트</p>
+  </footer>
+
+  <script src="../theme.js"></script>
+</body>
+</html>

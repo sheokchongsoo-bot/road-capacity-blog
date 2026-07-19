@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>제7강. 다차로도로·2차로도로 · 도로용량분석의 이론과 실제</title>
+  <meta name="description" content="고속도로 밖의 연속류 시설인 다차로도로와 2차로도로. 유형 구분과 효과척도(V/c·평균통행속도·총지체율)의 차이, 서비스수준 판정을 도로용량편람 2013 제6·7장으로 정리한다." />
+  <link rel="stylesheet" href="../katex.min.css" />
+  <link rel="stylesheet" href="../styles.css" />
+  <!-- FOUC 방지: 스타일 적용 전에 저장된/선호 테마를 즉시 반영한다. -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = saved || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="../index.html">도로용량분석의 이론과 실제</a>
+    <button id="theme-toggle" class="theme-toggle" type="button"
+            aria-label="테마 전환" title="라이트/다크 전환">
+      <svg class="icon icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+      </svg>
+      <svg class="icon icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+      </svg>
+    </button>
+  </header>
+
+  <main class="site-main">
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title">제7강. 다차로도로·2차로도로</h1>
+    <p class="post-meta">
+      <time datetime="2026-10-19">2026년 10월 19일</time>
+      <span class="tags"><span class="tag">#교통용량분석</span> <span class="tag">#강의</span> <span class="tag">#다차로도로</span> <span class="tag">#2차로도로</span> <span class="tag">#총지체율</span> <span class="tag">#서비스수준</span></span>
+    </p>
+  </header>
+  <div class="post-body">
+    <blockquote>
+<p><strong>강의 정보</strong> · 교통용량분석 · 제7강 (120분)
+<strong>교재</strong>: 『도로용량분석의 이론과 실제』 · <strong>근거 편람</strong>: 『도로용량편람』(2013) 제6장 다차로도로 · 제7장 2차로도로
+<strong>선행 학습</strong>: <a href="lecture-06-freeway-systems.html">제6강. 고속도로 종합분석</a></p>
+</blockquote>
+<p>지금까지의 연속류 분석은 고속도로가 대상이었습니다. 이번 강의에서는 같은 방법론이
+<strong>다차로도로</strong>와 <strong>2차로도로</strong>로 어떻게 확장·변형되는지 살펴봅니다. 연속류 파트의
+마지막 강의이며, 다음 주는 중간고사입니다.</p>
+<h2>학습 목표</h2>
+<ol>
+<li><strong>다차로도로</strong>의 유형(I·II)과 유형별 <strong>효과척도</strong>를 구분한다.</li>
+<li><strong>2차로도로</strong>의 독특한 효과척도인 <strong>총지체율</strong>(TDR)을 이해한다.</li>
+<li>고속도로·다차로도로·2차로도로의 <strong>분석 틀 차이</strong>를 정리한다.</li>
+</ol>
+<hr>
+<h2>1. 다차로도로</h2>
+<h3>정의</h3>
+<blockquote>
+<p><strong>다차로도로</strong>: 고속도로와 함께 지역간 간선도로 기능을 하는 <strong>양방향 4차로 이상</strong>의
+도로. 완전 출입통제가 아니라는 점에서 자동차전용도로와 다르고, <strong>신호등 밀도가
+0.5개/km 이하</strong>(신호 교차로 간격 2 km 이상)라는 점에서 도시·교외 간선도로와 다르다.</p>
+</blockquote>
+<p>주로 확장·신설된 4차로 일반국도가 해당합니다. 연속류와 단속류 특성이 혼재하므로
+두 유형으로 나눕니다.</p>
+<h3>유형 구분 — 〈표 6-1〉</h3>
+<table>
+<thead>
+<tr>
+<th align="center">구분</th>
+<th align="center">설계속도(km/h)</th>
+<th align="center">신호등 밀도</th>
+<th align="center">기본 최대통행속도 BSP</th>
+<th>특성</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">유형 I</td>
+<td align="center">100 · 90 · 80</td>
+<td align="center">0개/km</td>
+<td align="center">97, 87 km/h</td>
+<td>연속류 특성 강함(입체화)</td>
+</tr>
+<tr>
+<td align="center">유형 II</td>
+<td align="center">80 · 70</td>
+<td align="center">≤ 0.5개/km</td>
+<td align="center">87, 70 km/h</td>
+<td>연속류 + 단속류 혼재</td>
+</tr>
+</tbody></table>
+<p>기준이 상충하면 <strong>설계속도 → 신호등 밀도</strong> 순으로 유형을 정합니다.</p>
+<h3>효과척도 — 유형에 따라 다르다</h3>
+<ul>
+<li><strong>유형 I</strong>: 주효과척도 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mi mathvariant="normal">/</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">V/c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord mathnormal">c</span></span></span></span>, 보조 평균통행속도. (고속도로에 가까움)</li>
+<li><strong>유형 II</strong>: 주효과척도 <strong>평균통행속도</strong>, 보조 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mi mathvariant="normal">/</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">V/c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord mathnormal">c</span></span></span></span>. (신호가 있어 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mi mathvariant="normal">/</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">V/c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord mathnormal">c</span></span></span></span> 부적합)</li>
+</ul>
+<p>즉 유형 I은 고속도로 방법론(제2장)을 그대로 따르고, 유형 II는 구간 평균통행속도로
+판정합니다. 기본조건은 차로폭 3.5 m 이상, 측방여유폭 1.5 m 이상, 직선·평지,
+신호등·유출입 지점 0개/km입니다.</p>
+<h3>서비스수준 — 〈표 6-8〉 (유형 I, 설계속도 100 km/h)</h3>
+<table>
+<thead>
+<tr>
+<th align="center">LOS</th>
+<th align="center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mi mathvariant="normal">/</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">V/c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord mathnormal">c</span></span></span></span></th>
+<th align="center">서비스교통량 (pcphpl)</th>
+<th align="center">속도 (km/h)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">A</td>
+<td align="center">≤ 0.27</td>
+<td align="center">≤ 600</td>
+<td align="center">≥ 97</td>
+</tr>
+<tr>
+<td align="center">B</td>
+<td align="center">≤ 0.45</td>
+<td align="center">≤ 1,000</td>
+<td align="center">≥ 95</td>
+</tr>
+<tr>
+<td align="center">C</td>
+<td align="center">≤ 0.61</td>
+<td align="center">≤ 1,350</td>
+<td align="center">≥ 93</td>
+</tr>
+<tr>
+<td align="center">D</td>
+<td align="center">≤ 0.80</td>
+<td align="center">≤ 1,750</td>
+<td align="center">≥ 88</td>
+</tr>
+<tr>
+<td align="center">E</td>
+<td align="center">≤ 1.00</td>
+<td align="center">≤ 2,200</td>
+<td align="center">≥ 77</td>
+</tr>
+</tbody></table>
+<p>유형 I(100 km/h)의 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mi mathvariant="normal">/</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">V/c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord mathnormal">c</span></span></span></span>·교통량 기준은 고속도로 기본구간(〈표 2-1〉)과 사실상 같습니다.
+유형 II는 자유속도와 녹색시간비 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mi mathvariant="normal">/</mi><mi>C</mi></mrow><annotation encoding="application/x-tex">g/C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.0715em;">C</span></span></span></span>에 따라 서비스교통량을 달리 제시합니다(〈표 6-9〉).</p>
+<h3>예제 — 다차로도로 유형 I</h3>
+<blockquote>
+<p><strong>문제.</strong> 유형 I 다차로도로(설계속도 100 km/h) 기본구간에서 방향별 첨두 서비스교통량이
+1,500 pcphpl이다. 서비스수준은?</p>
+</blockquote>
+<div class="math-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mfrac><mi>V</mi><mi>c</mi></mfrac><mo>=</mo><mfrac><mn>1,500</mn><mn>2,200</mn></mfrac><mo>≈</mo><mn>0.68</mn></mrow><annotation encoding="application/x-tex">\frac{V}{c} = \frac{1{,}500}{2{,}200} \approx 0.68</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.0463em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">c</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.2222em;">V</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.2019em;vertical-align:-0.8804em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">200</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">500</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.8804em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.68</span></span></span></span></span></div>
+<p>〈표 6-8〉에서 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mi mathvariant="normal">/</mi><mi>c</mi><mo>=</mo><mn>0.68</mn></mrow><annotation encoding="application/x-tex">V/c = 0.68</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord mathnormal">c</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.68</span></span></span></span>은 C(≤ 0.61)와 D(≤ 0.80) 사이이므로 <strong>서비스수준 D</strong>입니다.</p>
+<h2>2. 2차로도로</h2>
+<h3>정의</h3>
+<blockquote>
+<p><strong>2차로도로</strong>: 중앙선을 기준으로 <strong>각 방향 한 차로씩</strong> 운행하는 도로. 앞지르기를
+하려면 <strong>대향 차로</strong>를 빌려야 하므로, 옆 차로로 앞지르는 다차로도로보다 처리 능력이
+크게 떨어진다.</p>
+</blockquote>
+<p>이 한계를 덜기 위해 일부 구간에 앞지르기차로를 두는 <strong>2+1차로도로</strong>를 설치하기도
+합니다. 설계속도·주변 개발에 따라 유형 I(연속류)·II(연속+단속)·III(단속)으로 나눕니다.</p>
+<p>기본조건은 차로폭 3.5 m 이상, 측방여유폭 1.5 m 이상, <strong>앞지르기 가능 구간 100%</strong>,
+승용차만, 평지입니다.</p>
+<h3>효과척도 — 총지체율(TDR)</h3>
+<p>2차로도로에서는 저속 차량 뒤로 <strong>차량군</strong>이 형성되어 운전자가 원하는 속도로 못 갑니다.
+이 지체 정도를 나타내는 것이 <strong>총지체율</strong>입니다.</p>
+<blockquote>
+<p><strong>총지체율(TDR, Total Delay Rate)</strong>: 일정 구간을 주행하는 차량군 내에서 차량이
+평균적으로 지체하는 비율(%). 운전자가 희망하는 속도에 대한 지체 정도.</p>
+</blockquote>
+<p>교통량이 적으면 앞지르기가 쉬워 TDR이 낮고, 용량에 가까워질수록 앞지르기 기회가
+줄어 거의 모든 차량이 차량군을 이루어 TDR이 높아집니다. TDR은 진행방향 교통량 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mi>d</mi></msub></mrow><annotation encoding="application/x-tex">V_d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>와
+대향 교통량에 따라 식 7-2와 〈표 7-1〉의 매개변수로 산정합니다. 2차로도로는 총지체율을
+주효과척도, 평균통행속도를 보조로 씁니다.</p>
+<h3>용량과 서비스수준 — 〈표 7-2〉</h3>
+<p>2차로도로 용량은 기본조건에서 <strong>양방향 3,200 pcph</strong>(방향별 최대 1,700 pcphpl)입니다.
+대향 차로 간섭 때문에 다차로도로 2개 차로 용량보다 작고, <strong>양방향으로 표시</strong>하는 점이
+다릅니다.</p>
+<table>
+<thead>
+<tr>
+<th align="center">LOS</th>
+<th align="center">유형 I 총지체율(%)</th>
+<th align="center">기본조건 양방향 교통량(pcph)</th>
+<th align="center">유형 II 총지체율(%)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">A</td>
+<td align="center">≤ 11</td>
+<td align="center">≤ 650</td>
+<td align="center">≤ 15</td>
+</tr>
+<tr>
+<td align="center">B</td>
+<td align="center">≤ 21</td>
+<td align="center">≤ 1,300</td>
+<td align="center">≤ 25</td>
+</tr>
+<tr>
+<td align="center">C</td>
+<td align="center">≤ 30</td>
+<td align="center">≤ 1,900</td>
+<td align="center">≤ 40</td>
+</tr>
+<tr>
+<td align="center">D</td>
+<td align="center">≤ 39</td>
+<td align="center">≤ 2,600</td>
+<td align="center">≤ 50</td>
+</tr>
+<tr>
+<td align="center">E</td>
+<td align="center">≤ 48</td>
+<td align="center">≤ 3,200</td>
+<td align="center">≤ 60</td>
+</tr>
+<tr>
+<td align="center">F</td>
+<td align="center">&gt; 48</td>
+<td align="center">&gt; 3,200</td>
+<td align="center">&gt; 60</td>
+</tr>
+</tbody></table>
+<p>서비스수준 E의 최대 통과 교통량(3,200 pcph)이 곧 용량입니다.</p>
+<h3>예제 — 2차로도로 유형 I</h3>
+<blockquote>
+<p><strong>문제.</strong> 유형 I 2차로도로(기본조건)의 첨두 양방향 교통량이 1,500 pcph이다. 서비스수준은?</p>
+</blockquote>
+<p>〈표 7-2〉에서 양방향 1,500 pcph는 B(≤ 1,300)를 넘고 C(≤ 1,900) 이하이므로 <strong>서비스수준 C</strong>
+입니다. (총지체율로도 유형 I 기준 21–30% 범위에 해당)</p>
+<h2>3. 세 연속류 시설 비교</h2>
+<table>
+<thead>
+<tr>
+<th>시설</th>
+<th>주효과척도</th>
+<th>용량(기본조건)</th>
+<th>특징</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>고속도로 기본구간</td>
+<td>밀도</td>
+<td>2,000–2,300 pcphpl</td>
+<td>완전 출입통제</td>
+</tr>
+<tr>
+<td>다차로도로 유형 I</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mi mathvariant="normal">/</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">V/c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord mathnormal">c</span></span></span></span> (속도 보조)</td>
+<td>약 2,200 pcphpl (100 km/h)</td>
+<td>4차로↑, 신호 ≤ 0.5/km</td>
+</tr>
+<tr>
+<td>다차로도로 유형 II</td>
+<td>평균통행속도</td>
+<td>속도 기준 판정</td>
+<td>연속+단속 혼재</td>
+</tr>
+<tr>
+<td>2차로도로</td>
+<td>총지체율</td>
+<td>3,200 pcph <strong>양방향</strong></td>
+<td>대향 차로로 앞지르기</td>
+</tr>
+</tbody></table>
+<p>같은 &quot;기본조건 → 보정 → 용량 → 서비스수준&quot;의 틀을 공유하되, <strong>시설의 물리적 특성에
+맞는 효과척도</strong>를 쓴다는 점이 핵심입니다.</p>
+<h2>4. 요약</h2>
+<ul>
+<li><strong>다차로도로</strong>(4차로↑, 신호 ≤ 0.5/km)는 유형 I(<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mi mathvariant="normal">/</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">V/c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord mathnormal">c</span></span></span></span>)·유형 II(평균통행속도)로 나뉜다.
+유형 I은 고속도로 방법론을 따른다.</li>
+<li><strong>2차로도로</strong>는 대향 차로로 앞지르기하는 특성 때문에 <strong>총지체율</strong>(TDR)을 주효과척도로 쓴다.</li>
+<li>2차로도로 용량은 <strong>양방향 3,200 pcph</strong>로, 방향이 아니라 양방향으로 표시한다.</li>
+<li>세 시설 모두 공통 분석 틀을 쓰되 <strong>효과척도가 시설 특성에 맞게 달라진다</strong>.</li>
+</ul>
+<h2>참고 — 미국 HCM(7판)의 2차로도로 전면 개정</h2>
+<ul>
+<li>HCM 7판은 2차로도로 방법론을 <strong>전면 교체</strong>했습니다. 기존의 추종시간비율(PTSF)·
+평균통행속도 대신 <strong>추종밀도</strong>(follower density, 추종 상태 차량 수/mi/차로)를 단일
+효과척도로 씁니다.</li>
+<li>도로 등급(Class I·II·III) 구분을 없애 모든 2차로도로에 같은 척도를 적용하고,
+앞지르기차로의 효과를 방법론에 통합했습니다.</li>
+<li>&quot;뒤따라가는 부담&quot;을 잰다는 문제의식은 KHCM의 총지체율(TDR)과 같습니다 — 척도의
+정의가 다를 뿐입니다.</li>
+<li>다차로도로는 HCM에서도 고속도로처럼 <strong>밀도</strong> 기반으로 판정합니다.</li>
+</ul>
+<h2>다음 강 예고</h2>
+<p><strong>8주차 · 중간정리 및 중간고사</strong> — 제1–7강의 <strong>연속류 파트</strong>(고속도로·다차로·2차로도로)를
+종합해 문제를 풀고 평가합니다. 이후 <strong>제8강부터 단속류·신호교차로 파트</strong>가 시작됩니다.</p>
+<h3>복습 문제</h3>
+<ol>
+<li>다차로도로와 도시·교외 간선도로를 나누는 기준(신호등 밀도)은?</li>
+<li>다차로도로 유형 I과 유형 II의 주효과척도가 다른 이유를 설명하시오.</li>
+<li>2차로도로에서 용량을 방향별이 아니라 양방향으로 표시하는 이유는?</li>
+<li>유형 I 2차로도로에서 총지체율이 35%로 산출되었다. 서비스수준은? (〈표 7-2〉)</li>
+<li>왜 2차로도로의 처리 능력이 다차로도로의 2개 차로보다 작은지 앞지르기 관점에서 설명하시오.</li>
+</ol>
+<hr>
+<p><em>출처: 『도로용량편람』, 국토교통부, 2013, 제6장 다차로도로(〈표 6-1〉 유형, 〈표 6-8〉·〈표 6-9〉
+서비스수준) · 제7장 2차로도로(총지체율 정의, 〈표 7-2〉 서비스수준, 식 7-1·7-2).</em></p>
+
+  </div>
+  <p class="post-back"><a href="../index.html">← 목록으로</a></p>
+</article>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>도로용량분석의 이론과 실제 · 교통용량분석 강의 노트</p>
+  </footer>
+
+  <script src="../theme.js"></script>
+</body>
+</html>

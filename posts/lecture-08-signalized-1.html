@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>제8강. 신호교차로 (1) — 단속류와 포화교통류율 · 도로용량분석의 이론과 실제</title>
+  <meta name="description" content="단속류의 핵심인 신호교차로. 제어지체 기반 서비스수준, 신호 운영과 손실시간, 그리고 기본 포화교통류율 S_0 = 2200 pcphgpl에서 출발하는 포화교통류율 개념을 도로용량편람 2013 제8장으로 정리한다." />
+  <link rel="stylesheet" href="../katex.min.css" />
+  <link rel="stylesheet" href="../styles.css" />
+  <!-- FOUC 방지: 스타일 적용 전에 저장된/선호 테마를 즉시 반영한다. -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = saved || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="../index.html">도로용량분석의 이론과 실제</a>
+    <button id="theme-toggle" class="theme-toggle" type="button"
+            aria-label="테마 전환" title="라이트/다크 전환">
+      <svg class="icon icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+      </svg>
+      <svg class="icon icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+      </svg>
+    </button>
+  </header>
+
+  <main class="site-main">
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title">제8강. 신호교차로 (1) — 단속류와 포화교통류율</h1>
+    <p class="post-meta">
+      <time datetime="2026-11-02">2026년 11월 2일</time>
+      <span class="tags"><span class="tag">#교통용량분석</span> <span class="tag">#강의</span> <span class="tag">#신호교차로</span> <span class="tag">#단속류</span> <span class="tag">#포화교통류율</span> <span class="tag">#제어지체</span></span>
+    </p>
+  </header>
+  <div class="post-body">
+    <blockquote>
+<p><strong>강의 정보</strong> · 교통용량분석 · 제8강 (120분)
+<strong>교재</strong>: 『도로용량분석의 이론과 실제』 · <strong>근거 편람</strong>: 『도로용량편람』(2013) 제8장 신호교차로
+<strong>선행 학습</strong>: <a href="lecture-07-multilane-twolane.html">제7강. 다차로도로·2차로도로</a></p>
+</blockquote>
+<p>중간고사로 연속류 파트를 마쳤습니다. 이제 <strong>단속류</strong>의 핵심인 <strong>신호교차로</strong>를
+시작합니다. 신호교차로는 여러 방향의 이동류에 <strong>통행권을 시간으로 나눠 주는</strong> 시설로,
+연속류에 없던 <strong>신호시간</strong>이라는 변수가 더해집니다.</p>
+<h2>학습 목표</h2>
+<ol>
+<li>신호교차로의 효과척도인 <strong>차량당 제어지체</strong>와 서비스수준을 안다.</li>
+<li><strong>신호 운영</strong>(주기·현시)과 <strong>손실시간</strong>의 구성을 이해한다.</li>
+<li><strong>포화교통류율</strong>의 개념과 기본 포화교통류율 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">S_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>를 안다.</li>
+</ol>
+<hr>
+<h2>1. 연속류에서 단속류로</h2>
+<p>연속류(고속도로 등)는 교통량·기하구조만 보면 됐지만, 신호교차로는 여기에
+<strong>신호시간과 신호운영 방식</strong>을 더해 분석합니다. 신호는 같은 공간을 다투는 상충
+교통류에 사용 시간을 배분하며, 이 배분이 각 접근로와 교차로의 용량을 좌우합니다.</p>
+<ul>
+<li>용량은 그 자체보다 <strong><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mi mathvariant="normal">/</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">V/c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord mathnormal">c</span></span></span></span>비(포화도 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi></mrow><annotation encoding="application/x-tex">X</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span></span></span></span>)</strong> 형태로 주로 씁니다.</li>
+<li>서비스수준은 <strong>차량당 제어지체</strong>로 판정합니다.</li>
+</ul>
+<p>분석은 <strong>차로군(lane group)</strong> 단위로 이루어지며, 이를 접근로별·교차로 전체로
+종합합니다. 단, 교차로 전체의 용량이나 평균 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mi mathvariant="normal">/</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">V/c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord mathnormal">c</span></span></span></span>는 의미가 없습니다(각 현시의
+임계차로군만 만족시키면 되기 때문).</p>
+<h2>2. 효과척도와 서비스수준</h2>
+<blockquote>
+<p><strong>제어지체(control delay)</strong>: 신호 제어 때문에 차로군이 감속·정지하면서 겪는 시간
+손실. 균일지체 + 증분지체 + 추가지체(초기 대기행렬 지체)로 구성된다.</p>
+</blockquote>
+<p>서비스수준은 분석기간(보통 첨두 15분) 동안의 <strong>차량당 평균 제어지체</strong>로 판정하며,
+혼잡이 심한 국내 여건을 반영해 <strong>8개 등급</strong>(A–F, FF, FFF)으로 나눕니다.</p>
+<table>
+<thead>
+<tr>
+<th align="center">서비스수준</th>
+<th align="center">차량당 제어지체 (초)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">A</td>
+<td align="center">≤ 15</td>
+</tr>
+<tr>
+<td align="center">B</td>
+<td align="center">≤ 30</td>
+</tr>
+<tr>
+<td align="center">C</td>
+<td align="center">≤ 50</td>
+</tr>
+<tr>
+<td align="center">D</td>
+<td align="center">≤ 70</td>
+</tr>
+<tr>
+<td align="center">E</td>
+<td align="center">≤ 100</td>
+</tr>
+<tr>
+<td align="center">F</td>
+<td align="center">≤ 220</td>
+</tr>
+<tr>
+<td align="center">FF</td>
+<td align="center">≤ 340</td>
+</tr>
+<tr>
+<td align="center">FFF</td>
+<td align="center">&gt; 340</td>
+</tr>
+</tbody></table>
+<p>연속류에서는 서비스수준 E가 용량 상태였지만, 신호교차로에서는 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mi mathvariant="normal">/</mi><mi>c</mi><mo>&lt;</mo><mn>1.0</mn></mrow><annotation encoding="application/x-tex">V/c &lt; 1.0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord mathnormal">c</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1.0</span></span></span></span>이어도
+지체가 커서 F가 될 수 있습니다. 즉 지체와 용량이 1 대 1로 대응하지 않습니다.</p>
+<h2>3. 신호 운영의 기초</h2>
+<ul>
+<li><strong>주기(<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi></mrow><annotation encoding="application/x-tex">C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">C</span></span></span></span>)</strong>: 모든 현시가 한 번씩 돌아오는 데 걸리는 시간(초).</li>
+<li><strong>현시(phase)</strong>: 특정 이동류 조합에 통행권이 주어지는 구간.</li>
+<li><strong>이동류(movement)</strong>: 직진·좌회전·우회전 등 방향별 교통류.</li>
+<li>한 현시는 <strong>녹색(<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi></mrow><annotation encoding="application/x-tex">G</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">G</span></span></span></span>) · 황색(<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi></mrow><annotation encoding="application/x-tex">Y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">Y</span></span></span></span>) · 적색(<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0077em;">R</span></span></span></span>)</strong> 신호로 구성됩니다.</li>
+</ul>
+<h2>4. 손실시간</h2>
+<p>녹색·황색시간이 모두 온전히 쓰이는 것은 아닙니다. 앞뒤로 <strong>버려지는 시간</strong>이
+있는데, 이를 손실시간이라 합니다.</p>
+<ul>
+<li><strong>출발손실시간</strong> — 녹색이 켜져도 앞쪽 5–6대는 포화차두시간보다 느리게 출발.
+우리나라는 <strong>2.3초</strong>로 봅니다.</li>
+<li><strong>진행연장시간(end lag)</strong> — 황색이 켜져도 교차로 부근 차량은 급정거할 수 없어
+황색 일부를 녹색처럼 사용. <strong>2.0초</strong>.</li>
+<li><strong>소거손실시간</strong> = 황색시간 − 진행연장시간 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo><mi>Y</mi><mo>−</mo><mn>2.0</mn></mrow><annotation encoding="application/x-tex">= Y - 2.0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">Y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2.0</span></span></span></span>.</li>
+<li><strong>손실시간</strong> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi></mrow><annotation encoding="application/x-tex">L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span></span></span></span> = 출발손실시간 + 소거손실시간.</li>
+</ul>
+<figure class="diagram">
+<svg viewBox="0 0 640 235" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="신호시간과 유효녹색시간">
+<rect x="60" y="70" width="315" height="36" fill="#22c55e"/>
+<rect x="375" y="70" width="21" height="36" fill="#eab308"/>
+<rect x="396" y="70" width="184" height="36" fill="#ef4444" fill-opacity="0.85"/>
+<g font-size="14" text-anchor="middle">
+<text x="217" y="93" fill="#fff" font-weight="bold">녹색 G = 45초</text>
+<text x="488" y="93" fill="#fff" font-weight="bold">적색</text>
+</g>
+<text x="385" y="62" fill="currentColor" font-size="12" text-anchor="middle">Y = 3초</text>
+<g stroke="currentColor" stroke-width="1.2" fill="none" opacity="0.8">
+<path d="M60 66 v-9 h16 v9"/><path d="M375 66 v-9 h14 v9"/>
+</g>
+<text x="60" y="42" fill="currentColor" font-size="12">출발손실 2.3초</text>
+<text x="300" y="42" fill="currentColor" font-size="12">진행연장 2.0초</text>
+<line x1="355" y1="46" x2="380" y2="56" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+<text x="455" y="42" fill="currentColor" font-size="12">소거손실 = Y − 2.0초</text>
+<line x1="452" y1="46" x2="394" y2="60" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+<g stroke="var(--text-muted)" stroke-width="1" stroke-dasharray="4 4">
+<line x1="76" y1="106" x2="76" y2="128"/><line x1="389" y1="106" x2="389" y2="128"/>
+</g>
+<rect x="76" y="128" width="313" height="30" fill="var(--accent)" fill-opacity="0.85" rx="4"/>
+<text x="232" y="148" fill="#fff" font-size="14" text-anchor="middle" font-weight="bold">유효녹색시간 g = G − 0.3초 = 44.7초</text>
+<text x="320" y="190" fill="var(--text-muted)" font-size="13" text-anchor="middle">녹색 시작 직후 2.3초는 버리고, 황색의 앞 2.0초는 녹색처럼 쓴다</text>
+</svg>
+<figcaption>그림. 한 현시의 신호시간 구성(G = 45초, Y = 3초 예) — 출발손실과 진행연장을 반영하면 유효녹색시간은 g = G − 0.3초가 된다.</figcaption>
+</figure>
+
+<p>이 손실시간을 뺀 실질적인 녹색을 <strong>유효녹색시간</strong>이라 하며, 그 정확한 산정과 이를
+이용한 <strong>용량 계산은 제9강</strong>에서 다룹니다. 유효녹색시간을 주기로 나눈 <strong>녹색시간비</strong> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mi mathvariant="normal">/</mi><mi>C</mi></mrow><annotation encoding="application/x-tex">g/C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.0715em;">C</span></span></span></span>가 용량 산정의 핵심 변수가 됩니다.</p>
+<h2>5. 포화교통류율</h2>
+<p>신호교차로 용량 분석의 출발점은 <strong>포화교통류율</strong>입니다.</p>
+<blockquote>
+<p><strong>포화교통류율(saturation flow rate, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span>)</strong>: 정지해 있던 차량이 녹색신호에서
+정지선을 통과할 수 있는 최대 교통량. 손실시간 없이 녹색이 1시간 계속될 때의
+교통류율로, 단위는 <strong>pcphgpl</strong>(승용차/녹색시간/차로).</p>
+</blockquote>
+<p>대기행렬이 방출될 때 <strong>6번째 차량부터</strong> 차두시간이 거의 일정해지는데, 이를
+<strong>포화차두시간</strong>(<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi></mrow><annotation encoding="application/x-tex">h</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">h</span></span></span></span>)이라 합니다. 포화교통류율은 여기서 바로 나옵니다.</p>
+<div class="math-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>S</mi><mo>=</mo><mfrac><mn>3,600</mn><mi>h</mi></mfrac><mspace width="2em"/><mo stretchy="false">(</mo><mtext>pcphgpl</mtext><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">S = \frac{3{,}600}{h} \qquad (\text{pcphgpl})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0074em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">h</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">3</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">600</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:2em;"></span><span class="mopen">(</span><span class="mord text"><span class="mord">pcphgpl</span></span><span class="mclose">)</span></span></span></span></span></div>
+<h3>기본 포화교통류율</h3>
+<p>기본조건에서의 포화교통류율을 <strong>기본 포화교통류율</strong> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">S_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>라 하며, 우리나라는
+<strong><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mn>0</mn></msub><mo>=</mo><mn>2,200</mn></mrow><annotation encoding="application/x-tex">S_0 = 2{,}200</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">2</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">200</span></span></span></span> pcphgpl</strong>입니다. 기본조건은 다음과 같습니다.</p>
+<ul>
+<li>차로폭 3 m 이상, 경사 없는 접근부</li>
+<li>교통류가 직진이며 모두 승용차</li>
+<li>정지선 상류 75 m 이내에 <strong>버스 정류장·노상 주정차 시설 없음</strong></li>
+<li>정지선 상류 60 m 이내에 <strong>진출입 차량 없음</strong></li>
+</ul>
+<h3>실제 포화교통류율</h3>
+<p>실제 도로는 기본조건을 못 갖추므로, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">S_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>에 여러 <strong>보정계수</strong>를 곱해 실제
+포화교통류율을 구합니다.</p>
+<div class="math-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>S</mi><mo>=</mo><msub><mi>S</mi><mn>0</mn></msub><mo>×</mo><msub><mi>f</mi><mi>w</mi></msub><mo>×</mo><msub><mi>f</mi><mi>g</mi></msub><mo>×</mo><msub><mi>f</mi><mrow><mi>H</mi><mi>V</mi></mrow></msub><mo>×</mo><mo>⋯</mo></mrow><annotation encoding="application/x-tex">S = S_0 \times f_w \times f_g \times f_{HV} \times \cdots</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0269em;">w</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0359em;">g</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0813em;">H</span><span class="mord mathnormal mtight" style="margin-right:0.2222em;">V</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.313em;"></span><span class="minner">⋯</span></span></span></span></span></div>
+<p>보정 요인에는 <strong>차로폭·경사·중차량</strong>과, 우측 차로의 <strong>노변마찰</strong>(이면도로 진출입,
+버스 정차, 노상 주차), 그리고 <strong>좌·우회전</strong>(직진환산계수) 등이 있습니다. 회전
+차로의 처리와 차로군 분류는 이후 강의에서 자세히 다룹니다.</p>
+<h3>예제 — 포화교통류율 산정</h3>
+<blockquote>
+<p><strong>문제.</strong> 어느 접근로에서 대기행렬 방출 시 포화차두시간이 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mo>=</mo><mn>1.8</mn></mrow><annotation encoding="application/x-tex">h = 1.8</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">h</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1.8</span></span></span></span>초로 관측되었다.
+이 차로의 포화교통류율은?</p>
+</blockquote>
+<div class="math-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>S</mi><mo>=</mo><mfrac><mn>3,600</mn><mn>1.8</mn></mfrac><mo>=</mo><mn>2,000</mn><mtext> pcphgpl</mtext></mrow><annotation encoding="application/x-tex">S = \frac{3{,}600}{1.8} = 2{,}000 \ \text{pcphgpl}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0074em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1.8</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">3</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">600</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord">2</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">000</span><span class="mspace"> </span><span class="mord text"><span class="mord">pcphgpl</span></span></span></span></span></span></div>
+<p>참고로 기본조건이라면 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mo>≈</mo><mn>3,600</mn><mi mathvariant="normal">/</mi><mn>2,200</mn><mo>≈</mo><mn>1.64</mn></mrow><annotation encoding="application/x-tex">h \approx 3{,}600/2{,}200 \approx 1.64</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">h</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">3</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">600/2</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">200</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1.64</span></span></span></span>초입니다. 관측값 1.8초는
+그보다 길어, 이 접근로가 기본조건보다 다소 불리함을 뜻합니다.</p>
+<h2>6. 요약</h2>
+<ul>
+<li>신호교차로는 통행권을 시간으로 나누는 <strong>단속류</strong> 시설로, <strong>신호시간</strong>을 더해 분석한다.</li>
+<li>효과척도는 <strong>차량당 제어지체</strong>이며, 서비스수준은 <strong>A–FFF 8등급</strong>이다.</li>
+<li>손실시간 = <strong>출발손실(2.3초) + 소거손실</strong>, 소거손실 = 황색 − 진행연장(2.0초).</li>
+<li>포화교통류율 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo>=</mo><mn>3,600</mn><mi mathvariant="normal">/</mi><mi>h</mi></mrow><annotation encoding="application/x-tex">S = 3{,}600/h</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">3</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">600/</span><span class="mord mathnormal">h</span></span></span></span>이며, 기본 포화교통류율 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mn>0</mn></msub><mo>=</mo><mn>2,200</mn></mrow><annotation encoding="application/x-tex">S_0 = 2{,}200</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">2</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">200</span></span></span></span> pcphgpl에
+보정계수를 곱해 실제 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span>를 구한다.</li>
+</ul>
+<h2>참고 — 미국 HCM(7판)과의 비교</h2>
+<ul>
+<li>기본 포화교통류율은 <strong>1,900 pc/h/ln</strong>(대도시권 기준)으로 KHCM(2,200)보다 낮습니다.</li>
+<li>서비스수준 경계는 제어지체 <strong>10 / 20 / 35 / 55 / 80초</strong>의 6단계(A–F)로, 한국
+(15 / 30 / … / 340초, 8단계)보다 낮은 지체에서 등급이 떨어집니다.</li>
+<li>HCM은 <strong>포화도가 1.0을 넘으면 지체와 무관하게 LOS F</strong>로 판정합니다. KHCM은 지체만으로
+판정하되 F를 FF·FFF로 세분하는 점이 다릅니다.</li>
+</ul>
+<h2>다음 강 예고</h2>
+<p><strong>제9강. 신호교차로 (2)</strong> — 손실시간에서 <strong>유효녹색시간</strong>을 구하고, 이를 이용해
+<strong>용량</strong> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mi>S</mi><mo>⋅</mo><mo stretchy="false">(</mo><mi>g</mi><mi mathvariant="normal">/</mi><mi>C</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">c = S \cdot (g/C)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">c</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.0715em;">C</span><span class="mclose">)</span></span></span></span>와 <strong>포화도</strong> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>=</mo><mi>V</mi><mi mathvariant="normal">/</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">X = V/c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord mathnormal">c</span></span></span></span>를 계산합니다. 나아가 한 현시의
+<strong>임계차로군</strong>을 찾아 교차로의 임계 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mi mathvariant="normal">/</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">V/c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord mathnormal">c</span></span></span></span>비를 종합하는 방법을 익힙니다.</p>
+<h3>복습 문제</h3>
+<ol>
+<li>연속류와 달리 신호교차로 분석에 추가로 필요한 조건은 무엇인가?</li>
+<li>신호교차로에서 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mi mathvariant="normal">/</mi><mi>c</mi><mo>&lt;</mo><mn>1.0</mn></mrow><annotation encoding="application/x-tex">V/c &lt; 1.0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord mathnormal">c</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1.0</span></span></span></span>인데도 서비스수준이 F가 될 수 있는 이유는?</li>
+<li>황색시간이 4.0초일 때 소거손실시간은? (진행연장 2.0초)</li>
+<li>포화차두시간이 2.0초로 관측되면 포화교통류율은 몇 pcphgpl인가?</li>
+<li>포화교통류율의 단위 pcphgpl이 연속류의 pcphpl과 어떻게 다른지 설명하시오.</li>
+</ol>
+<hr>
+<p><em>출처: 『도로용량편람』, 국토교통부, 2013, 제8장 신호교차로 (〈표 8-2〉 서비스수준,
+용어 정의, 포화교통류율·기본 포화교통류율·손실시간, 포화교통류율 보정 개요).</em></p>
+
+  </div>
+  <p class="post-back"><a href="../index.html">← 목록으로</a></p>
+</article>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>도로용량분석의 이론과 실제 · 교통용량분석 강의 노트</p>
+  </footer>
+
+  <script src="../theme.js"></script>
+</body>
+</html>

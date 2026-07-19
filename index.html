@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>도로용량분석의 이론과 실제</title>
+  <meta name="description" content="교통용량분석 강의 노트 — 도로용량편람과 HCM을 바탕으로 정리합니다." />
+  <link rel="stylesheet" href="katex.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- FOUC 방지: 스타일 적용 전에 저장된/선호 테마를 즉시 반영한다. -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = saved || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="index.html">도로용량분석의 이론과 실제</a>
+    <button id="theme-toggle" class="theme-toggle" type="button"
+            aria-label="테마 전환" title="라이트/다크 전환">
+      <svg class="icon icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+      </svg>
+      <svg class="icon icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+      </svg>
+    </button>
+  </header>
+
+  <main class="site-main">
+    <section class="post-list">
+  <h1 class="page-title">도로용량분석의 이론과 실제</h1>
+  <p class="page-intro">교통용량분석 강의 노트 — 도로용량편람과 HCM을 바탕으로 정리합니다.</p>
+  <ul class="post-list-items">
+    <li class="post-list-item">
+  <a class="post-list-link" href="posts/lecture-00-course-preparation.html">
+    <h2 class="post-list-title">제0강. 강의 준비</h2>
+    <p class="post-list-meta">
+      <time datetime="2026-09-04">2026년 9월 4일</time>
+      <span class="tags"><span class="tag">#교통용량분석</span> <span class="tag">#강의계획</span> <span class="tag">#오리엔테이션</span> <span class="tag">#도로용량편람</span></span>
+    </p>
+    <p class="post-list-desc">강의 오리엔테이션. 도로용량편람 2013의 전체 구성을 15주(강의 13주 + 시험 2주) 분량과 대조해, 무엇을 어떻게 다룰지 결정하고 주차별 계획을 제시한다.</p>
+  </a>
+</li>
+<li class="post-list-item">
+  <a class="post-list-link" href="posts/lecture-01-road-capacity.html">
+    <h2 class="post-list-title">제1강. 도로용량의 이해</h2>
+    <p class="post-list-meta">
+      <time datetime="2026-09-07">2026년 9월 7일</time>
+      <span class="tags"><span class="tag">#교통용량분석</span> <span class="tag">#강의</span> <span class="tag">#도로용량</span> <span class="tag">#서비스수준</span> <span class="tag">#HCM</span></span>
+    </p>
+    <p class="post-list-desc">교통용량분석 첫 번째 강의. 도로용량과 서비스수준의 정의, 기본조건, 효과척도, 핵심 분석 파라미터를 도로용량편람(2013)과 미국 HCM 최신판을 바탕으로 정리한다.</p>
+  </a>
+</li>
+<li class="post-list-item">
+  <a class="post-list-link" href="posts/lecture-02-basic-freeway-segment.html">
+    <h2 class="post-list-title">제2강. 고속도로 기본구간 (1) — 용량과 보정계수</h2>
+    <p class="post-list-meta">
+      <time datetime="2026-09-14">2026년 9월 14일</time>
+      <span class="tags"><span class="tag">#교통용량분석</span> <span class="tag">#강의</span> <span class="tag">#고속도로</span> <span class="tag">#기본구간</span> <span class="tag">#보정계수</span> <span class="tag">#승용차환산</span></span>
+    </p>
+    <p class="post-list-desc">연속류의 대표인 고속도로 기본구간. 기본용량에서 출발해 차로폭·측방여유폭 보정계수 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>W</mi></msub></mrow><annotation encoding="application/x-tex">f_W</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">W</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>와 중차량 보정계수 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mrow><mi>H</mi><mi>V</mi></mrow></msub></mrow><annotation encoding="application/x-tex">f_{HV}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0813em;">H</span><span class="mord mathnormal mtight" style="margin-right:0.2222em;">V</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>로 실제 조건의 용량을 산정하는 방법을 도로용량편람 2013을 바탕으로 정리한다.</p>
+  </a>
+</li>
+<li class="post-list-item">
+  <a class="post-list-link" href="posts/lecture-03-freeway-los-lanes.html">
+    <h2 class="post-list-title">제3강. 고속도로 기본구간 (2) — 서비스수준 판정과 차로수 결정</h2>
+    <p class="post-list-meta">
+      <time datetime="2026-09-21">2026년 9월 21일</time>
+      <span class="tags"><span class="tag">#교통용량분석</span> <span class="tag">#강의</span> <span class="tag">#고속도로</span> <span class="tag">#서비스수준</span> <span class="tag">#차로수</span> <span class="tag">#특정경사</span></span>
+    </p>
+    <p class="post-list-desc">제2강에서 구한 용량을 이용해 교통량 대 용량비로 서비스수준을 판정하고, 특정 경사구간의 승용차환산계수를 적용하며, 목표 서비스수준을 만족하는 차로수를 결정하는 방법을 도로용량편람 2013으로 정리한다.</p>
+  </a>
+</li>
+<li class="post-list-item">
+  <a class="post-list-link" href="posts/lecture-04-freeway-weaving.html">
+    <h2 class="post-list-title">제4강. 고속도로 엇갈림구간</h2>
+    <p class="post-list-meta">
+      <time datetime="2026-09-28">2026년 9월 28일</time>
+      <span class="tags"><span class="tag">#교통용량분석</span> <span class="tag">#강의</span> <span class="tag">#고속도로</span> <span class="tag">#엇갈림구간</span> <span class="tag">#서비스수준</span></span>
+    </p>
+    <p class="post-list-desc">두 교통류가 서로 교차하는 고속도로 엇갈림구간의 정의와 형태, 영향 요소, 그리고 밀도를 주효과척도로 하는 서비스수준 판정 절차를 도로용량편람 2013 제3장을 바탕으로 정리한다.</p>
+  </a>
+</li>
+<li class="post-list-item">
+  <a class="post-list-link" href="posts/lecture-05-ramp-junction.html">
+    <h2 class="post-list-title">제5강. 고속도로 연결로 접속부</h2>
+    <p class="post-list-meta">
+      <time datetime="2026-10-05">2026년 10월 5일</time>
+      <span class="tags"><span class="tag">#교통용량분석</span> <span class="tag">#강의</span> <span class="tag">#고속도로</span> <span class="tag">#연결로접속부</span> <span class="tag">#합류</span> <span class="tag">#분류</span> <span class="tag">#서비스수준</span></span>
+    </p>
+    <p class="post-list-desc">유입·유출 연결로가 본선에 접속되는 합류부·분류부의 영향권과 용량, 영향권 밀도를 주효과척도로 하는 서비스수준 판정 절차를 도로용량편람 2013 제4장을 바탕으로 정리한다.</p>
+  </a>
+</li>
+<li class="post-list-item">
+  <a class="post-list-link" href="posts/lecture-06-freeway-systems.html">
+    <h2 class="post-list-title">제6강. 고속도로 종합분석</h2>
+    <p class="post-list-meta">
+      <time datetime="2026-10-12">2026년 10월 12일</time>
+      <span class="tags"><span class="tag">#교통용량분석</span> <span class="tag">#강의</span> <span class="tag">#고속도로</span> <span class="tag">#종합분석</span> <span class="tag">#병목</span> <span class="tag">#대기행렬</span></span>
+    </p>
+    <p class="post-list-desc">기본구간·엇갈림·연결로 접속부를 하나의 노선으로 연계해, 구간을 분할·분석하고 병목이 전체 서비스수준을 좌우하는 원리와 통행 와해 시 대기행렬 분석을 도로용량편람 2013 제5장으로 정리한다.</p>
+  </a>
+</li>
+<li class="post-list-item">
+  <a class="post-list-link" href="posts/lecture-07-multilane-twolane.html">
+    <h2 class="post-list-title">제7강. 다차로도로·2차로도로</h2>
+    <p class="post-list-meta">
+      <time datetime="2026-10-19">2026년 10월 19일</time>
+      <span class="tags"><span class="tag">#교통용량분석</span> <span class="tag">#강의</span> <span class="tag">#다차로도로</span> <span class="tag">#2차로도로</span> <span class="tag">#총지체율</span> <span class="tag">#서비스수준</span></span>
+    </p>
+    <p class="post-list-desc">고속도로 밖의 연속류 시설인 다차로도로와 2차로도로. 유형 구분과 효과척도(V/c·평균통행속도·총지체율)의 차이, 서비스수준 판정을 도로용량편람 2013 제6·7장으로 정리한다.</p>
+  </a>
+</li>
+<li class="post-list-item">
+  <a class="post-list-link" href="posts/lecture-08-signalized-1.html">
+    <h2 class="post-list-title">제8강. 신호교차로 (1) — 단속류와 포화교통류율</h2>
+    <p class="post-list-meta">
+      <time datetime="2026-11-02">2026년 11월 2일</time>
+      <span class="tags"><span class="tag">#교통용량분석</span> <span class="tag">#강의</span> <span class="tag">#신호교차로</span> <span class="tag">#단속류</span> <span class="tag">#포화교통류율</span> <span class="tag">#제어지체</span></span>
+    </p>
+    <p class="post-list-desc">단속류의 핵심인 신호교차로. 제어지체 기반 서비스수준, 신호 운영과 손실시간, 그리고 기본 포화교통류율 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mn>0</mn></msub><mo>=</mo><mn>2200</mn></mrow><annotation encoding="application/x-tex">S_0 = 2200</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2200</span></span></span></span> pcphgpl에서 출발하는 포화교통류율 개념을 도로용량편람 2013 제8장으로 정리한다.</p>
+  </a>
+</li>
+<li class="post-list-item">
+  <a class="post-list-link" href="posts/lecture-09-signalized-2.html">
+    <h2 class="post-list-title">제9강. 신호교차로 (2) — 유효녹색시간·용량·포화도</h2>
+    <p class="post-list-meta">
+      <time datetime="2026-11-09">2026년 11월 9일</time>
+      <span class="tags"><span class="tag">#교통용량분석</span> <span class="tag">#강의</span> <span class="tag">#신호교차로</span> <span class="tag">#유효녹색시간</span> <span class="tag">#용량</span> <span class="tag">#포화도</span> <span class="tag">#임계차로군</span></span>
+    </p>
+    <p class="post-list-desc">손실시간에서 유효녹색시간을 구하고, 차로군 용량 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mi>S</mi><mo stretchy="false">(</mo><mi>g</mi><mi mathvariant="normal">/</mi><mi>C</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">c = S(g/C)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">c</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.0715em;">C</span><span class="mclose">)</span></span></span></span>와 포화도 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>=</mo><mi>V</mi><mi mathvariant="normal">/</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">X = V/c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord mathnormal">c</span></span></span></span>를 계산한 뒤, 임계차로군으로 교차로의 임계 V/c비를 종합하는 방법을 도로용량편람 2013 제8장으로 정리한다.</p>
+  </a>
+</li>
+<li class="post-list-item">
+  <a class="post-list-link" href="posts/lecture-10-signalized-3.html">
+    <h2 class="post-list-title">제10강. 신호교차로 (3) — 지체와 서비스수준</h2>
+    <p class="post-list-meta">
+      <time datetime="2026-11-16">2026년 11월 16일</time>
+      <span class="tags"><span class="tag">#교통용량분석</span> <span class="tag">#강의</span> <span class="tag">#신호교차로</span> <span class="tag">#지체</span> <span class="tag">#균일지체</span> <span class="tag">#증분지체</span> <span class="tag">#서비스수준</span></span>
+    </p>
+    <p class="post-list-desc">신호교차로 서비스수준의 실제 기준인 제어지체를 균일지체 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">d_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>·증분지체 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">d_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>·추가지체 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mn>3</mn></msub></mrow><annotation encoding="application/x-tex">d_3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>로 계산하고, 연동보정을 거쳐 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo>=</mo><msub><mi>d</mi><mn>1</mn></msub><mi>P</mi><mi>F</mi><mo>+</mo><msub><mi>d</mi><mn>2</mn></msub><mo>+</mo><msub><mi>d</mi><mn>3</mn></msub></mrow><annotation encoding="application/x-tex">d = d_1 PF + d_2 + d_3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>로 서비스수준을 판정하는 방법을 도로용량편람 2013 제8장으로 정리한다.</p>
+  </a>
+</li>
+<li class="post-list-item">
+  <a class="post-list-link" href="posts/lecture-11-signalized-4.html">
+    <h2 class="post-list-title">제11강. 신호교차로 (4) — 종합 예제와 특수상황</h2>
+    <p class="post-list-meta">
+      <time datetime="2026-11-23">2026년 11월 23일</time>
+      <span class="tags"><span class="tag">#교통용량분석</span> <span class="tag">#강의</span> <span class="tag">#신호교차로</span> <span class="tag">#종합예제</span> <span class="tag">#중앙버스전용차로</span> <span class="tag">#특수상황</span></span>
+    </p>
+    <p class="post-list-desc">포화교통류율에서 지체·서비스수준까지 신호교차로 분석 전 과정을 하나의 종합 예제로 풀고, 중앙버스전용차로 교차로(<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mrow><mi>b</mi><mn>0</mn></mrow></msub><mo>=</mo><mn>1100</mn></mrow><annotation encoding="application/x-tex">S_{b0} = 1100</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">b</span><span class="mord mtight">0</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1100</span></span></span></span> vphgpl)와 공사·악천후 등 특수상황 분석을 도로용량편람 2013 제8장으로 정리한다.</p>
+  </a>
+</li>
+<li class="post-list-item">
+  <a class="post-list-link" href="posts/lecture-12-unsignalized-roundabout.html">
+    <h2 class="post-list-title">제12강. 비신호교차로·회전교차로</h2>
+    <p class="post-list-meta">
+      <time datetime="2026-11-30">2026년 11월 30일</time>
+      <span class="tags"><span class="tag">#교통용량분석</span> <span class="tag">#강의</span> <span class="tag">#비신호교차로</span> <span class="tag">#회전교차로</span> <span class="tag">#간격수락</span> <span class="tag">#서비스수준</span></span>
+    </p>
+    <p class="post-list-desc">신호 없이 간격수락으로 운영되는 비신호교차로(양방향정지·무통제)와 회전교차로의 분석 원리, 효과척도와 서비스수준 판정을 도로용량편람 2013 제10·11장으로 정리한다.</p>
+  </a>
+</li>
+<li class="post-list-item">
+  <a class="post-list-link" href="posts/lecture-13-comprehensive-review.html">
+    <h2 class="post-list-title">제13강. 도로용량분석의 종합 정리</h2>
+    <p class="post-list-meta">
+      <time datetime="2026-12-07">2026년 12월 7일</time>
+      <span class="tags"><span class="tag">#교통용량분석</span> <span class="tag">#강의</span> <span class="tag">#종합정리</span> <span class="tag">#시험대비</span> <span class="tag">#효과척도</span> <span class="tag">#빈출유형</span></span>
+    </p>
+    <p class="post-list-desc">도로용량편람 2013 전체(제1–15장)에서 각종 자격·채용 시험에 자주 출제되는 핵심 개념·수치·계산 유형을 총정리한다. 시설별 효과척도 총괄표, 암기 필수 수치, 빈출 계산 유형과 개념 함정.</p>
+  </a>
+</li>
+  </ul>
+</section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>도로용량분석의 이론과 실제 · 교통용량분석 강의 노트</p>
+  </footer>
+
+  <script src="theme.js"></script>
+</body>
+</html>

@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>제0강. 강의 준비 · 도로용량분석의 이론과 실제</title>
+  <meta name="description" content="강의 오리엔테이션. 도로용량편람 2013의 전체 구성을 15주(강의 13주 + 시험 2주) 분량과 대조해, 무엇을 어떻게 다룰지 결정하고 주차별 계획을 제시한다." />
+  <link rel="stylesheet" href="../katex.min.css" />
+  <link rel="stylesheet" href="../styles.css" />
+  <!-- FOUC 방지: 스타일 적용 전에 저장된/선호 테마를 즉시 반영한다. -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = saved || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="../index.html">도로용량분석의 이론과 실제</a>
+    <button id="theme-toggle" class="theme-toggle" type="button"
+            aria-label="테마 전환" title="라이트/다크 전환">
+      <svg class="icon icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+      </svg>
+      <svg class="icon icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+      </svg>
+    </button>
+  </header>
+
+  <main class="site-main">
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title">제0강. 강의 준비</h1>
+    <p class="post-meta">
+      <time datetime="2026-09-04">2026년 9월 4일</time>
+      <span class="tags"><span class="tag">#교통용량분석</span> <span class="tag">#강의계획</span> <span class="tag">#오리엔테이션</span> <span class="tag">#도로용량편람</span></span>
+    </p>
+  </header>
+  <div class="post-body">
+    <blockquote>
+<p><strong>강의 정보</strong> · 교통용량분석 · 2026학년도 2학기 · 제0강 · 오리엔테이션
+<strong>첫 강의</strong>: 2026년 9월 7일 (월)
+<strong>교재</strong>: 『도로용량분석의 이론과 실제』 · <strong>근거 편람</strong>: 『도로용량편람』(국토교통부, 2013)
+<strong>참고</strong>: <em>Highway Capacity Manual, 7th Edition</em> (TRB, 2022)</p>
+</blockquote>
+<p>이 글은 본격적인 강의에 앞서 <strong>무엇을, 왜, 어떤 순서로 배우는지</strong>를 정리하는
+안내입니다. 학기 전체의 지도를 먼저 그려 두면, 매주 배우는 내용이 전체에서 어디에
+위치하는지 알 수 있습니다.</p>
+<h2>1. 이 강의가 답하려는 질문</h2>
+<p>교통용량분석은 두 가지 실무 질문에 공학적으로 답하는 과목입니다.</p>
+<ul>
+<li><strong>얼마나 감당하는가?</strong> — 이 도로/교차로가 처리할 수 있는 최대 교통량은?</li>
+<li><strong>얼마나 잘 굴러가는가?</strong> — 지금(또는 장래) 이 시설의 서비스 수준은?</li>
+</ul>
+<p>이 두 질문에 답하는 표준 절차가 <strong>도로용량편람</strong>에 정리되어 있고, 우리는 이를
+읽고 계산할 수 있게 되는 것을 목표로 합니다. 나아가 학기 마지막 강의에서는 강의한
+범위를 넘어 <strong>편람 전체(제1–15장)를 대상으로, 각종 자격·채용 시험에 자주 출제되는
+내용을 중심으로 종합 정리</strong>합니다.</p>
+<h2>2. 먼저 던진 질문 — 편람 전체를 다 다룰 수 있는가?</h2>
+<p>우리 강의는 <strong>한 학기 15주, 주당 120분</strong>입니다. 이 중 <strong>중간정리·중간고사 1주와
+종합정리·기말고사 1주</strong>를 빼면, 실제 강의에 쓸 수 있는 주는 <strong>13주</strong>입니다. 그렇다면
+이 13주 동안 도로용량편람 2013의 내용을 <strong>전부</strong> 강의할 수 있을까요? 이를 판단하려면
+편람이 얼마나 큰지 봐야 합니다.</p>
+<p>도로용량편람 2013은 본문이 <strong>15개 장, 약 670쪽</strong>에 이르며, 각 장은 대체로
+<code>개요 → 방법론 → 분석 과정 → 예제</code>의 구조를 가집니다.</p>
+<table>
+<thead>
+<tr>
+<th align="center">장</th>
+<th>제목</th>
+<th align="center">분량(쪽)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td>개론</td>
+<td align="center">10</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td>고속도로 기본구간</td>
+<td align="center">44</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td>고속도로 엇갈림구간</td>
+<td align="center">22</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td>고속도로 연결로 접속부</td>
+<td align="center">36</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td>고속도로 종합분석</td>
+<td align="center">20</td>
+</tr>
+<tr>
+<td align="center">6</td>
+<td>다차로도로</td>
+<td align="center">30</td>
+</tr>
+<tr>
+<td align="center">7</td>
+<td>2차로도로</td>
+<td align="center">46</td>
+</tr>
+<tr>
+<td align="center">8</td>
+<td><strong>신호교차로</strong></td>
+<td align="center"><strong>210</strong></td>
+</tr>
+<tr>
+<td align="center">9</td>
+<td>연결로–일반도로 결합부</td>
+<td align="center">38</td>
+</tr>
+<tr>
+<td align="center">10</td>
+<td>비신호교차로</td>
+<td align="center">32</td>
+</tr>
+<tr>
+<td align="center">11</td>
+<td>회전교차로</td>
+<td align="center">34</td>
+</tr>
+<tr>
+<td align="center">12</td>
+<td>도시 및 교외 간선도로</td>
+<td align="center">62</td>
+</tr>
+<tr>
+<td align="center">13</td>
+<td>대중교통</td>
+<td align="center">26</td>
+</tr>
+<tr>
+<td align="center">14</td>
+<td>보행자 시설</td>
+<td align="center">28</td>
+</tr>
+<tr>
+<td align="center">15</td>
+<td>자전거도로</td>
+<td align="center">31</td>
+</tr>
+</tbody></table>
+<h3>판단: 전부 다루는 것은 현실적으로 불가능하다</h3>
+<p>간단히 계산해 봅시다. 실제 강의에 쓸 수 있는 주는 <strong>13주</strong>입니다. 반면 편람은
+15개 장이고, 각 장을 <strong>방법론과 예제까지</strong> 제대로 다루려면 짧아도 1주, 분량이 큰
+장은 2주 이상이 필요합니다.</p>
+<p>특히 <strong>제8장 신호교차로는 그 자체로 210쪽</strong>(중앙버스전용차로, 특수상황, 예제
+포함)으로, 이 한 장만 온전히 다뤄도 3–4주가 필요합니다. 15개 장을 모두 훑으려면
+현실적으로 <strong>18–22주 이상</strong>이 필요하며, 강의 13주에는 담기지 않습니다.</p>
+<blockquote>
+<p><strong>결론</strong>: 도로용량편람 2013의 <strong>모든 내용</strong>을 강의 13주 안에 다루는 것은
+불가능하다. 얕게 훑으면 15개 장을 나열할 수는 있으나, 학부 수준에서
+<strong>예제까지 손으로 풀며 체득</strong>하는 목표와는 맞지 않는다.</p>
+</blockquote>
+<h2>3. 결정 — 두 파트에 집중한다</h2>
+<p>전부를 얕게 훑는 대신, <strong>가장 근간이 되고 실무 빈도가 높은 두 파트</strong>를 골라
+방법론과 예제까지 깊이 있게 다룹니다.</p>
+<ol>
+<li><strong>고속도로 용량분석</strong> — 연속류(uninterrupted flow)의 대표. 편람 제2–5장.
+(기본구간 · 엇갈림구간 · 연결로 접속부 · 종합분석)</li>
+<li><strong>신호교차로 용량분석</strong> — 단속류(interrupted flow)의 핵심. 편람 제8장.
+(포화교통류율 · 용량과 포화도 · 지체와 서비스수준)</li>
+</ol>
+<p>이 두 파트를 고른 이유는 분명합니다.</p>
+<ul>
+<li><strong>연속류와 단속류</strong>라는 교통류의 두 축을 모두 경험하게 된다.</li>
+<li>두 파트의 방법론(기본조건 → 보정 → 용량 → 서비스수준)은 나머지 장(다차로도로,
+2차로도로, 비신호교차로, 간선도로 등)에도 <strong>그대로 확장</strong>되는 원리를 담고 있다.</li>
+<li>실무·자격시험·후속 과목에서 가장 자주 쓰이는 분석이다.</li>
+</ul>
+<p><strong>두 파트를 뼈대로 삼되, 남는 강의 시간은 같은 방법론이 그대로 확장되는 인접
+시설로 넓힙니다.</strong> 연속류 파트 끝에 <strong>다차로도로·2차로도로</strong>를, 단속류 파트 끝에
+<strong>비신호교차로·회전교차로</strong>를 배치했습니다. 그리고 학기의 마지막 강의(제13강)는
+<strong>도로용량분석의 종합 정리</strong>로 삼아, 강의한 두 파트를 넘어 <strong>편람 전체</strong>(제1–15장)에서
+각종 자격·채용 시험에 자주 출제되는 핵심 개념·수치·계산 유형을 압축해 정리합니다.
+새 방법론을 익히는 부담 없이 편람의 더 많은 부분을 다룰 수 있어 가장 효율적입니다.
+강의에서 따로 다루지 않는 장(간선도로·대중교통·보행자·자전거 등)도 시설별 효과척도와
+핵심 기준을 이 종합 정리에서 함께 짚으므로, 두 파트의 틀과 더불어 <strong>스스로 편람을
+읽어 적용할 수 있는</strong> 토대가 마련됩니다.</p>
+<h2>4. 15주 주차별 강의 계획</h2>
+<p>전체 15주는 <strong>강의 13주 + 시험 2주</strong>로 구성됩니다. <strong>기초 개념</strong>(1주) →
+<strong>연속류·고속도로 파트</strong>(2–7주) → <strong>중간고사</strong>(8주) → <strong>단속류·신호교차로 파트</strong>
+(9–14주) → <strong>기말고사</strong>(15주) 순으로 이어집니다.</p>
+<table>
+<thead>
+<tr>
+<th align="center">주차</th>
+<th align="center">강</th>
+<th>주제</th>
+<th>핵심 내용</th>
+<th align="center">편람</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">제1강</td>
+<td>도로용량의 이해</td>
+<td>용량·서비스수준·기본조건·효과척도·PHF·PCE</td>
+<td align="center">1장</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">제2강</td>
+<td>고속도로 기본구간 (1)</td>
+<td>연속류 특성, 기본용량, 보정계수(f_W, f_HV), 승용차환산</td>
+<td align="center">2장</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center">제3강</td>
+<td>고속도로 기본구간 (2)</td>
+<td>서비스수준 판정, 특정 경사구간, 차로수 결정, 예제</td>
+<td align="center">2장</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center">제4강</td>
+<td>고속도로 엇갈림구간</td>
+<td>엇갈림 유형, 영향권, 방법론, 예제</td>
+<td align="center">3장</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center">제5강</td>
+<td>고속도로 연결로 접속부</td>
+<td>합류·분류 영향권, 서비스수준, 예제</td>
+<td align="center">4장</td>
+</tr>
+<tr>
+<td align="center">6</td>
+<td align="center">제6강</td>
+<td>고속도로 종합분석</td>
+<td>시설 연계, 병목, 구간 분할 분석</td>
+<td align="center">5장</td>
+</tr>
+<tr>
+<td align="center">7</td>
+<td align="center">제7강</td>
+<td>다차로도로·2차로도로</td>
+<td>연속류 확장, 두 시설의 용량·서비스수준</td>
+<td align="center">6·7장</td>
+</tr>
+<tr>
+<td align="center"><strong>8</strong></td>
+<td align="center">—</td>
+<td><strong>중간정리 · 중간고사</strong></td>
+<td>연속류(고속도로) 파트 종합 및 평가</td>
+<td align="center">1–7장</td>
+</tr>
+<tr>
+<td align="center">9</td>
+<td align="center">제8강</td>
+<td>신호교차로 (1)</td>
+<td>단속류 개념, 신호운영(주기·현시·손실시간), 포화교통류율</td>
+<td align="center">8장</td>
+</tr>
+<tr>
+<td align="center">10</td>
+<td align="center">제9강</td>
+<td>신호교차로 (2)</td>
+<td>유효녹색시간, 용량과 포화도(v/c), 임계차로군</td>
+<td align="center">8장</td>
+</tr>
+<tr>
+<td align="center">11</td>
+<td align="center">제10강</td>
+<td>신호교차로 (3)</td>
+<td>지체 산정(균일+증분지체), 서비스수준 판정</td>
+<td align="center">8장</td>
+</tr>
+<tr>
+<td align="center">12</td>
+<td align="center">제11강</td>
+<td>신호교차로 (4)</td>
+<td>종합 예제, 중앙버스전용차로 교차로, 특수상황</td>
+<td align="center">8장</td>
+</tr>
+<tr>
+<td align="center">13</td>
+<td align="center">제12강</td>
+<td>비신호교차로·회전교차로</td>
+<td>단속류 확장, 상충·간격수락, 서비스수준</td>
+<td align="center">10·11장</td>
+</tr>
+<tr>
+<td align="center">14</td>
+<td align="center">제13강</td>
+<td><strong>도로용량분석의 종합 정리</strong></td>
+<td>시설별 효과척도, 암기 필수 수치, 빈출 계산 유형, 개념 함정</td>
+<td align="center">전체</td>
+</tr>
+<tr>
+<td align="center"><strong>15</strong></td>
+<td align="center">—</td>
+<td><strong>기말고사</strong></td>
+<td>학기 전체 종합 평가, 설계 프로젝트 발표</td>
+<td align="center">전체</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>위 계획은 진행 상황에 따라 한 주 내에서 유연하게 조정될 수 있습니다. 각 강의
+상세 노트는 매주 이 블로그에 게시됩니다.</p>
+</blockquote>
+<h2>5. 평가 및 운영</h2>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th align="center">비중</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>중간고사</td>
+<td align="center">30%</td>
+<td>연속류·고속도로 파트 (제8주)</td>
+</tr>
+<tr>
+<td>기말고사</td>
+<td align="center">30%</td>
+<td>단속류·신호교차로 파트 중심, 전체 종합 (제15주)</td>
+</tr>
+<tr>
+<td>과제 · 프로젝트</td>
+<td align="center">20%</td>
+<td>매주 편람 예제 + 구간 용량·서비스수준 분석 프로젝트</td>
+</tr>
+<tr>
+<td>출석 · 참여</td>
+<td align="center">20%</td>
+<td>매주 출석 및 수업 참여</td>
+</tr>
+</tbody></table>
+<p>합계 100%. 중간·기말고사 각 30%, 과제·프로젝트 20%, 출석·참여 20%로 운영합니다.</p>
+<h2>6. 학습 준비</h2>
+<ul>
+<li><strong>선수 지식</strong>: 교통공학 개론, 기초 통계, 단위 환산(대/시, pcphpl, pc/mi/ln 등).</li>
+<li><strong>준비물</strong>:<ul>
+<li><strong>교재</strong> — 『도로용량분석의 이론과 실제』</li>
+<li><strong>도로용량편람 2013</strong> (국토교통부) — 해당 장</li>
+<li>공학용 계산기, 편람의 분석표(worksheet)</li>
+</ul>
+</li>
+<li><strong>학습 태도</strong>: 이 과목은 <strong>손으로 예제를 푸는 만큼</strong> 이해가 깊어집니다. 매주
+제시되는 예제를 직접 계산해 보세요.</li>
+</ul>
+<h2>다음 강 예고</h2>
+<p><strong>제1강. 도로용량의 이해</strong> — 모든 분석의 공통 언어인 용량, 서비스수준, 기본조건,
+효과척도, 그리고 PHF·PCE 같은 핵심 파라미터를 정리합니다. (이미 게시되어 있으니
+먼저 읽어 두세요.)</p>
+<hr>
+<p><em>출처: 『도로용량편람』, 국토교통부, 2013 (전 15장 구성 및 장별 분량은 원문 목차
+기준). 강의 계획·평가 비중은 담당 교수의 강의계획서에 따라 확정됩니다.</em></p>
+
+  </div>
+  <p class="post-back"><a href="../index.html">← 목록으로</a></p>
+</article>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>도로용량분석의 이론과 실제 · 교통용량분석 강의 노트</p>
+  </footer>
+
+  <script src="../theme.js"></script>
+</body>
+</html>

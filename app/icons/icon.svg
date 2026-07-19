@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#1e7a34"/>
+  <g transform="translate(256 256) rotate(-38)">
+    <!-- 오이 몸통 -->
+    <rect x="-52" y="-150" width="104" height="300" rx="52" fill="#8fd36a"/>
+    <rect x="-52" y="-150" width="46" height="300" rx="23" fill="#a9e087" opacity=".7"/>
+    <!-- 씨앗/점 무늬 -->
+    <g fill="#2f7d2f">
+      <circle cx="6" cy="-96" r="7"/>
+      <circle cx="-16" cy="-40" r="7"/>
+      <circle cx="14" cy="6" r="7"/>
+      <circle cx="-10" cy="60" r="7"/>
+      <circle cx="10" cy="112" r="7"/>
+    </g>
+    <!-- 꼭지 -->
+    <rect x="-16" y="-176" width="32" height="34" rx="12" fill="#3f7f2f"/>
+  </g>
+</svg>
