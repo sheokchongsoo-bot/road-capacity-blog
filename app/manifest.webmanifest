@@ -1,0 +1,20 @@
+{
+  "name": "인천연구원 나눔장터",
+  "short_name": "나눔장터",
+  "description": "인천연구원 원내 직원 전용 중고물품·재능 거래 앱 (프로토타입)",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#ff6f3c",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "./icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
