@@ -8,7 +8,7 @@ const {
 
 // ---------- 색상/폰트 토큰 ----------
 const NAVY = "1F3A5F";     // 제목/헤딩
-const ACCENT = "EA580C";   // 강조(주황)
+const ACCENT = "2B8A3E";   // 초록(오이마켓 포인트)   // 강조(주황)
 const GREY = "555555";
 const LIGHT = "F2F5F9";    // 표 헤더 배경
 const LIGHT2 = "FBFCFE";   // 표 줄무늬
@@ -168,7 +168,7 @@ children.push(new Paragraph({
   spacing: { after: 140, line: 300 }, alignment: AlignmentType.CENTER,
   border: { top: { style: BorderStyle.SINGLE, size: 4, color: ACCENT }, bottom: { style: BorderStyle.SINGLE, size: 4, color: ACCENT },
     left: { style: BorderStyle.SINGLE, size: 4, color: ACCENT }, right: { style: BorderStyle.SINGLE, size: 4, color: ACCENT } },
-  shading: { type: ShadingType.CLEAR, fill: "FFF6F1", color: "auto" },
+  shading: { type: ShadingType.CLEAR, fill: "EEF7EF", color: "auto" },
   children: [t("“인천연구원 직원끼리 중고물품과 재능을 안전하게 사고팔고 나누는, 당근마켓의 원내 버전”", { size: 22, bold: true, color: NAVY })],
 }));
 
